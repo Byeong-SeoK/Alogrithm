@@ -1,0 +1,48 @@
+import sys
+from collections import deque
+
+TC = int(sys.stdin.readline().rstrip())
+
+for i in range(0, TC):
+    order = sys.stdin.readline().rstrip()
+    array_length = int(sys.stdin.readline().rstrip())
+
+    if(array_length == 0):
+        arr = []
+    else:
+        arr = list(sys.stdin.readline().split(','))
+        # arr은 ['[1', '2', '3', '4]'] 형태로 쪼개져 저장된다.
+
+        arr[0] = arr[0][1]  # arr의 0번째 '[1'을 '1'로 바꾼다.
+        arr[len(arr) - 1] = arr[len(arr) - 1][0]  # arr의 마지막을 '4]'을 '4'로 바꾼다.
+        # 따라서 arr은 ['1', '2', '3', '4']가 된다.
+
+        for k in range(0, len(arr)):
+            arr[k] = int(arr[k])
+
+
+    flag = 0#R이 2번 나오면 reverse할 필요가 없으므로 R이 몇 번 나왔는지 받는다.
+    #만약 R이 홀수 번 나왔으면 1,2,3,4 -> 4,3,2,1 이 되고 4부터 빠지므로 사실상 pop()이 되는 것이다.
+    #만약 R이 짝수 번 나왔으면 1,2,3,4 -> 1,2,3,4 이 되고 1부터 빠지므로 popleft()를 하는 것처럼 된다.
+
+    error = False #error 발생 여부를 받는 bool 변수
+
+    for j in order:
+        if(j == 'R'):
+            flag = flag+1
+        else:
+            if(len(arr) == 0):
+                print('error')
+                error = True
+                break
+            else:
+                if (flag % 2 == 1):  # R이 홀수 번 나왔으므로 pop 진행
+                    arr.pop()
+                else:  # R이 짝수 번 나왔으므로 popleft 진행
+                    arr.pop(0)
+
+    if(flag % 2 == 1): #최종 R이 홀수 번 나왔으므로 출력을 위해 한번 뒤집는다.
+        arr.reverse()
+
+    if(not error):
+        print(arr)

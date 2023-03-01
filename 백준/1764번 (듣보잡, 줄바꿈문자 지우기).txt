@@ -1,0 +1,26 @@
+import sys
+N, M = map(int, sys.stdin.readline().split())
+#N은 듣도 못한 사람의 수, M은 보도 못한 사람의 수이다.
+
+people = {}
+for i in range(0, N+M):
+    name = sys.stdin.readline().rstrip()
+    #string을 입력받을 때는 string 제일 끝에 붙는 \n을 지워줘야한다.
+    if(name in people):
+        people[name] = people[name]+1
+    else:
+        people[name] = 1
+
+#들어보지도 보지도 못한 사람이면 dictionary에서 value가 2를 가짐을 이용한다.
+
+count = 0 #듣보잡 수를 받는 변수
+answer = [] #듣보잡의 이름이 들어가는 배열
+for j in people:
+    if(people[j] == 2):
+        count = count+1
+        answer.append(j)
+        
+print(count)
+answer.sort()
+for k in range(0, len(answer)):
+    print(answer[k])

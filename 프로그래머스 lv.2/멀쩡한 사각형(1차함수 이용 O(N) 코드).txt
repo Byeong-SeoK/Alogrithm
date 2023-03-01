@@ -1,0 +1,22 @@
+import math
+def solution(w,h):
+    answer = 1
+    size = w * h #직사각형의 사이즈이자 만들어지는 정사각형의 총 갯수
+    
+    if(w == h):
+        answer = size - w
+    elif(w == 1 or h == 1):
+        answer = 0
+    else:
+        y = h #1차함수의 y절편 값
+        d = -1 * (h / w) #1차함수의 기울기        
+        
+        sum = 0
+        for i in range(1, w):
+            item = d * i + y
+            sum = sum + math.floor(item)
+            
+        answer = sum * 2
+        
+                
+    return answer

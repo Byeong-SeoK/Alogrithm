@@ -1,0 +1,14 @@
+T = int(input()) #test case 수
+
+#방의 호수 형식은 YYXX형태이다.
+for i in range(0, T):
+    floor, room, count = map(int, input().split()) #층수, 방 개수, 몇번째 손님인지
+    
+    YY = count % floor
+    XX = count // floor +1
+    if(YY == 0):
+        YY = floor
+        XX = count // floor
+    
+    result = YY*100 + XX
+    print(result)

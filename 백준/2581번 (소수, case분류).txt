@@ -1,0 +1,36 @@
+M = int(input())
+N = int(input())
+
+MIN = 0
+SUM = 0
+for i in range(M, N+1):
+    if(i == 1):
+        continue
+    elif(i == 2):
+        MIN = 2
+        SUM = SUM + i
+    else:
+        find = False
+        for j in range(2, i):
+            if(i%j == 0):
+                find = False
+                break
+            else:
+                find = True
+        
+        if(find):
+            if(MIN == 0):
+                MIN = i
+                SUM = SUM + i
+            elif(MIN > i):
+                MIN = i
+                SUM = SUM + i
+            else:
+                SUM = SUM + i
+            
+
+if(SUM == 0):
+    print(-1)
+else:
+    print(SUM)
+    print(MIN)

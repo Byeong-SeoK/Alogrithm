@@ -1,0 +1,39 @@
+import sys
+from collections import deque
+
+TC = int(sys.stdin.readline())
+for i in range(0, TC):
+    order = sys.stdin.readline().rstrip()
+    arr_length = int(sys.stdin.readline().rstrip())
+    array = deque(sys.stdin.readline().rstrip()[1:-1].split(','))
+    #array의 마지막 원소를 보면 숫자+] 형태로 들어있다.
+
+    flag = 0 #R이 몇 번 나왔는지 즉, 몇 번 뒤집어 주어야 하는지 받는 변수이다.
+
+    if(arr_length == 0):
+        array = []
+        #deque에서는 deque([]) --> []가 들어있는 배열로 간주한다.
+        #그러므로 빈 배열로 초기화할 필요가 있다.
+    for j in order:
+        if(j == 'R'):
+            flag = flag+1
+        elif(j == 'D'):
+            if(len(array) == 0):
+                print('error')
+                break
+            else:
+                if(flag % 2 == 1):
+                    #R이 홀수 번만 나왔으므로 1,2,3,4 -> 4,3,2,1 가 된 형태이다.
+                    #그러므로 4부터 빠지므로 원 배열의 pop한 형태와 동일하다.
+
+                    array.pop()
+                else:
+                    #R이 짝수 번만 나왔으므로 1,2,3,4 -> 1,2,3,4 가 된 형태이다.
+                    #그러므로 1부터 빠지므로 원 배열의 popleft한 형태와 동일하다.
+
+                    array.popleft()
+
+    else:
+        if(flag % 2 == 1): #최종 R이 홀수 개여서 뒤집어야하는 상황, 출력을 위해 뒤집어야한다.
+            array.reverse()
+        print('[' + ','.join(array) + ']')

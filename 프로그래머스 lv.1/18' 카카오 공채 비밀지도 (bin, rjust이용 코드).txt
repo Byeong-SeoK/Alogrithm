@@ -1,0 +1,9 @@
+def solution(n, arr1, arr2):
+    answer = []
+    for i,j in zip(arr1,arr2):
+        a12 = str(bin(i|j)[2:]) #두 수의 이진수를 구한 뒤 or연산자 한 결과를 나타낸 것
+        a12=a12.rjust(n,'0') #왼쪽에서부터 오른쪽으로 0을 string의 길이가 n이 될때까지 붙이는 것이다.
+        a12=a12.replace('1','#')
+        a12=a12.replace('0',' ')
+        answer.append(a12)
+    return answer

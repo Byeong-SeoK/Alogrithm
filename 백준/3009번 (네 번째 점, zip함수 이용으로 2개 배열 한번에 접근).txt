@@ -1,0 +1,30 @@
+x = {}
+y = {}
+for i in range(0, 3):
+    a, b = map(int, input().split())
+
+    if (a in x):
+        x[a] = x[a] + 1
+    else:
+        x[a] = 1
+
+    if (b in y):
+        y[b] = y[b] + 1
+    else:
+        y[b] = 1
+
+need_x, need_y = 0, 0
+#4번째 x, y좌표를 받는 변수이다.
+
+for j, k in zip(x, y):
+    #j는 x를 추적하는 변수이고 k는 y를 추적하는 변수이다.
+    #그래서 x[j]로 접근해야 되고 y[k]로 접근해야 된다.
+    #그리고 위와 같이 접근하기 위해서는 x, y배열을 zip으로 묶어야한다.
+    
+    if(x[j] == 1):
+        need_x = j
+
+    if(y[k] == 1):
+        need_y = k
+
+print(need_x, need_y)

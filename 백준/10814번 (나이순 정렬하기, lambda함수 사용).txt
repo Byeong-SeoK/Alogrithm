@@ -1,0 +1,16 @@
+import sys
+
+N = int(sys.stdin.readline())
+
+member = []
+for i in range(0, N):
+    member.append(sys.stdin.readline().split())
+
+member.sort(key=lambda x: int(x[0]))
+#위 문법의 뜻은 먼저 member를 sort하는데 이때 sort의 기준은 x이다.
+#이 x는 lambda로 정의되었는데 lambda는 javascript의 익명함수와 비슷한 것이다.
+#런타임동안 생성되어 저 sort함수가 실행되는 동안만 사용되고 버려진다. 그래서 메모리가 절약된다.
+#x의 정의부는 : 이후의 내용에 해당하는데 int(x[0])으로 int(member[0])과 같은 의미이다.
+
+for p in range(0, len(member)):
+    print(member[p][0], member[p][1])

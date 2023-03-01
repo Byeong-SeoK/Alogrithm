@@ -1,0 +1,20 @@
+import sys
+N = int(sys.stdin.readline()) #숫자 카드의 개수
+num = list(map(int, input().split()))#숫자 카드에 적혀있는 정수
+#num.sort() #num을 오름차순으로 정렬
+
+n = int(input()) #가지고 있는 숫자 카드의 개수
+candidate = list(map(int, sys.stdin.readline().split())) #가지고 있는 숫자 카드의 정수
+
+count = {} #숫자 카드에서 서로 다른 수가 각각 중복으로 몇개씩 있는지 받는 사전
+for i in num:
+    if(i in count):
+        count[i] = count[i]+1
+    else:
+        count[i] = 1
+
+for j in range(0, len(candidate)):
+    if(candidate[j] in count):
+        print(count[candidate[j]], end=" ")
+    else:
+        print(0, end=" ")

@@ -1,0 +1,20 @@
+city = int(input()) #도시 갯수
+road = list(map(int, input().split())) #도로 길이
+oil_cost = list(map(int, input().split())) #1L 기름 비용
+
+final_cost = 0 #최종적으로 드는 기름 값
+
+minimum = oil_cost[0] #기름 값이 최소인 도시에서의 기름 값을 받는 변수
+#일단 첫번째 도시에서 반드시 주유해야하므로 minimum은 첫번째 도시의 기름 값이 된다.
+
+final_cost = final_cost + road[0]*oil_cost[0]
+#첫번째 도시에서 두번째 도시로 갈 때 반드시 도로 길이 만큼 주유를 해야 한다.
+
+for i in range(1, len(road)):
+    if(minimum < oil_cost[i]):#최소 비용이 현재 도시 기름 값보다 작은 경우, 해당 거리*최소 비용을 곱한 값을 더한다.
+        final_cost = final_cost + minimum*road[i]
+    else:#최소 비용이 현재 도시 기름 값보다 큰 경우, 해당 거리*현재 도시의 기름 값을 곱한 값을 더한다.
+        minimum = oil_cost[i]
+        final_cost = final_cost + minimum*road[i]
+
+print(final_cost)

@@ -1,0 +1,27 @@
+computer = int(input())
+computer_pair = int(input())
+
+graph = [[]*computer for _ in range(0, computer+1)]
+#graph[x][y]의 값이 1인 것이 서로 연결되어 있음을 표현한 것이다.
+
+for i in range(0, computer_pair):
+    node1, node2 = map(int, input().split())
+    graph[node1].append(node2)
+    graph[node2].append(node1)
+    #node1 -> node2 이자 node2 -> node1도 가능하므로
+    #배열에서 2개 다 연결되어있음을 1로 표현해야 한다.
+
+count = 0 #1번 컴퓨터를 통해서 몇 개의 컴퓨터가 감염되는지 받는 변수이다.
+visited = [0]*(computer+1) #해당 컴퓨터를 방문하였는지 받는 변수이다. 방문하면 1 아니면 0이다.
+#이때 배열은 0번째 부터 시작하므로 computer+1번째 까지 index를 가지고 있는 배열을 만들어야한다.
+
+def dfs(start):
+    global count
+    visited[start] = 1
+    for end in graph[start]:
+        if(visited[end] == 0): #해당 컴퓨터를 방문하지 않았다면
+            count = count+1
+            dfs(end)  # 해당 컴퓨터와 연결된 다른 컴퓨터에 접근한다.
+
+dfs(1)
+print(count)

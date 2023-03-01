@@ -1,0 +1,36 @@
+import sys
+N = int(sys.stdin.readline())
+
+sosu = []
+for p in range(2, 10001):
+    if(p == 2):
+        sosu.append(p)
+    elif(p == 3):
+        sosu.append(p)
+    else:
+        find = False
+        for q in range(2, int(p**0.5)+1):
+            if(p%q == 0):
+                find = False
+                break
+            else:
+                find = True
+                
+        if(find):
+            sosu.append(p)
+
+for i in range(0, N):
+    num = int(sys.stdin.readline())
+    
+    A = num//2
+    B = num//2
+    #두 개의 숫자 모두 중앙값을 두고 하나는 +1 하나는 -1로 나아가게한다.
+    #그리고 두 숫자 모두 소수일 때 가장 차이가 적은 소수 2개가 된다.
+    #그래서 그때 반복문을 종료시키면 된다.
+    while True:
+        if(A in sosu and B in sosu):
+            print(A, B)
+            break
+        else:
+            A = A-1
+            B = B+1

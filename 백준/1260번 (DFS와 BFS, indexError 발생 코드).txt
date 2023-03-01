@@ -1,0 +1,43 @@
+N, M, V = map(int, input().split()) #N은 정점의 개수, M은 간선의 개수, V는 탐색을 시작할 정점의 번호이다.
+
+graph = [[] for _ in range(0, N+1)]
+for i in range(0, M):
+    node1, node2 = map(int, input().split())
+    graph[node1].append(node2)
+    graph[node2].append(node1)
+
+for j in range(0, M): #정점은 작은 것부터 방문해야하므로 graph 배열을 정렬한다.
+    graph[j].sort()
+
+dfs_visited = [0]*(N+1) #dfs로 정점을 방문하였는지 여부를 받는 배열
+dfs_order = [] #dfs로 방문한 정점의 순서를 받는 배열
+def dfs(start):
+    dfs_visited[start] = 1
+    dfs_order.append(start)
+    for node in graph[start]:
+        if(dfs_visited[node] == 0):
+            dfs(node)
+    return
+
+queue = [] #bfs로 방문할 정점을 받는 queue에 해당
+bfs_visited = [0] * (N+1) #bfs로 정점을 방문하였는지 여부를 받는 배열
+bfs_order = [] #bfs로 방문한 정점의 순서를 받는 배열
+def bfs(start):
+    queue.append(start)
+
+    while queue:
+        node = queue.pop(0) #제일 앞에 있는 정점을 뺀다.
+        if(bfs_visited[node] == 0): #해당 정점을 이전에 방문했으면 방문 순서에 넣을 필요가 없으므로 방문하지 않은 정점만 넣도록 한다.
+            bfs_order.append(node)
+
+        bfs_visited[node] = 1 #방문을 하였으니 방문했다는 표시를 한다.
+
+        for j in graph[node]: #방문한 정점에 연결된 정점을 bfs로 방문해야하므로 방문할 정점을 받는 queue에 저장한다.
+            if(bfs_visited[j] == 0): #다만 방문한 정점은 넣을 필요가 없으므로 방문하지 않은 정점만 queue에 저장한다.
+                queue.append(j)
+
+dfs(V)
+print(*dfs_order) #asterik으로 배열의 요소만 출력하게 한다.
+
+bfs(V)
+print(*bfs_order)

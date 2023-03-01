@@ -1,0 +1,30 @@
+TC = int(input())
+
+for i in range(0, TC):
+    number = int(input())
+    closet = {}  # 옷의 종류별로 구분해서 저장하는 사전
+    case = 0 #각 TC별로 만들 수 있는 총 경우의 수
+    temp = 1 #각 옷의 종류별로 만들 수 있는 경우의 수(곱)을 구하기 위해 있는 임시 변수
+
+    for j in range(0, number):
+        clothes, classification = input().split()
+        #print(clothes, classification)
+
+        if(classification in closet):
+            closet[classification].append(clothes)
+        else:
+            closet[classification] = []
+            closet[classification].append(clothes)
+
+    #print(closet)
+
+    if(len(closet) == 1):
+        for k in closet:
+            case = case + len(closet[k])
+    else:
+        for k in closet:
+            temp = temp*(len(closet[k])+1)
+            #+1을 하는 이유는 해당 종류의 옷을 안 입는 경우를 포함하기 위해서이다.
+            #대신 모두 다 안 입는 경우가 생기므로 반드시 나중에 -1을 해야한다.
+        case = case+(temp-1)
+    print(case)

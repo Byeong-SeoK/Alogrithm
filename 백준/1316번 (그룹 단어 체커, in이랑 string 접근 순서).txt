@@ -1,0 +1,16 @@
+N = int(input())
+
+count = N #일단 그룹 단어가 최대라 가정
+for i in range(0, N):
+    word = input()
+    
+    for j in range(0, len(word)-1):
+        if(word[j] == word[j+1]): #aabb aabc 이렇게 바로 옆에 붙어있는 것이 서로 같은 경우
+            continue
+        else: #abc, aba 같이 바로 옆에 붙어있는 것이 서로 다른 경우
+            if(word[j] in word[j+1:]):
+                #abc 이렇게가 아니라 aba 처럼 이후에 word[j]가 또 나오는 경우
+                count = count-1
+                break
+                
+print(count)

@@ -1,0 +1,12 @@
+import sys
+
+url, number = map(int, sys.stdin.readline().split())
+
+urlpw = {}
+for i in range(0, url):
+    info = sys.stdin.readline().rstrip().split()
+    urlpw[info[0]] = info[1]
+
+for j in range(0, number):
+    address = sys.stdin.readline().rstrip()
+    print(urlpw[address])

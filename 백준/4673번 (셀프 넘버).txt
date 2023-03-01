@@ -1,0 +1,18 @@
+number = list(range(1, 10001))
+remove = [] #생성자가 있는 숫자들이 들어가는 배열
+
+for i in number:
+    for j in str(i): #생성자가 있는 숫자를 찾는다.
+        i = i+int(j)
+    if(i <= 10000):
+        remove.append(i)
+
+remove = set(remove)
+#생성자로 만들어지는 수에는 중복값이 존재하므로
+#set을 통해서 배열 내의 중복 값을 제거한다.
+
+for p in remove:
+    number.remove(p)
+
+for q in number:
+    print(q)

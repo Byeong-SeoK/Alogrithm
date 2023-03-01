@@ -1,0 +1,40 @@
+TC = int(input())
+
+for i in range(0, TC):
+    N, M = map(int, input().split())
+    # N은 문서의 개수, M은 몇 번째로 인쇄되었는지 궁금한 문서가 현재 Queue에서 몇 번째에 놓여 있는지
+    paper = list(map(int, input().split()))
+
+    count = 0
+    if (N == 1):
+        print(1)
+    else:
+        count = 0 #관심있는 문서가 몇번째로 출력되는지 순서를 세는 변수
+
+        priority = paper[M]
+        #우선순위를 -1로 바꾸기 전에 미리 priority에 해당 값을 넣는다.
+        #이는 반복문에서 우선순위가 최대인 것과 비교할 때 사용할 예정이다.
+
+        paper[M] = -1
+        #우선순위가 중복될 수도 있으므로 다른 것들과 비교하기 용이하게 -1로 둔다.
+
+        while True:
+            MAX = max(paper)
+            if(paper[0] == -1 and MAX <= priority):
+                #관심있는 문서가 제일 앞에 왔고 그 문서의 우선순위가 가장 높은 상황
+                #MAX <= priority로 해놨기 때문에 우선순위에 중복이 있는
+                #[1(관심),1,1,1] 같은 경우에도 올바르게 원하는 문서를 먼저 출력할 수 있다.
+                count = count+1
+                print(count)
+                break
+            else:
+                if(paper[0] == MAX and MAX >= priority):
+                    #가장 우선순위가 높은 문서가 제일 앞에 있는 상황
+                    #MAX >= priority로 해놨기 때문에 우선순위에 중복이 있는
+                    #[1,1,1(관심),1] 같은 경우에도 관심 문서 앞에 있는
+                    #1 두개가 관심 있는 문서보다 먼저 출력된다.
+                    paper.pop(0)
+                    count = count+1
+                else:
+                    temp = paper.pop(0)
+                    paper.append(temp)

@@ -1,0 +1,15 @@
+N, K = map(int, input().split())
+
+temperature = list(map(int, input().split()))
+temperature_sum = []
+
+temperature_sum.append(sum(temperature[:K]))
+for i in range(0, N - K):
+    Sum = temperature_sum[i] - temperature[i] + temperature[i + K]
+    temperature_sum.append(Sum)
+    # 0번째는 0~K 까지의 배열의 값의 합을 구해서 더해야하지만,
+    # 이후의 구간 합에 대해서는 구간합 배열의 0번째(i번째)에서 온도 배열의 0번째(i번째)를 빼고
+    # 온도 배열의 K+1번째(i+K번째)를 더하면 된다. 이렇게 풀어야 하는 이유는 sum함수의 시간복잡도가
+    # O(N)으로 길기 때문에 알고리즘의 전체 시간복잡도가 O(N^2)가 되기 때문이다.
+
+print(max(temperature_sum))

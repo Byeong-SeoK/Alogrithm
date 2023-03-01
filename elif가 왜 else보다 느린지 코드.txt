@@ -1,0 +1,58 @@
+import dis
+#이것을 사용하면 컴구에서 배웠던 코드 연산이 어떻게 되는지 알수 있다.
+
+def f1(a):
+    if a > 0:
+        return 1
+    elif a < 0: # 저는 문제에서 0을 빼기 위해서 elif를 썼습니다.
+        return 0
+
+def f2(a):
+    if a > 0:
+        return 1
+    else:
+        return 0
+
+dis.dis(f1)
+dis.dis(f2)
+
+
+"""
+설명
+아래는 f1과 f2를 실행시켜서 얻어낸 출력이다.
+f1의 출력 결과이다.
+ 66           0 LOAD_FAST                0 (a)
+              2 LOAD_CONST               1 (0)
+              4 COMPARE_OP               4 (>)
+              6 POP_JUMP_IF_FALSE        6 (to 12)
+
+ 67           8 LOAD_CONST               2 (1)
+             10 RETURN_VALUE
+
+ 68     >>   12 LOAD_FAST                0 (a)
+             14 LOAD_CONST               1 (0)
+             16 COMPARE_OP               0 (<)
+             18 POP_JUMP_IF_FALSE       12 (to 24)
+
+ 69          20 LOAD_CONST               1 (0)
+             22 RETURN_VALUE
+
+ 68     >>   24 LOAD_CONST               0 (None)
+             26 RETURN_VALUE
+
+
+f2의 실행 결과이다.
+ 72           0 LOAD_FAST                0 (a)
+              2 LOAD_CONST               1 (0)
+              4 COMPARE_OP               4 (>)
+              6 POP_JUMP_IF_FALSE        6 (to 12)
+
+ 73           8 LOAD_CONST               2 (1)
+             10 RETURN_VALUE
+
+ 75     >>   12 LOAD_CONST               1 (0)
+             14 RETURN_VALUE
+
+elif를 사용한 f1이 else를 사용한 f2보다 더 많은 연산을 했음을 알 수 있다.
+그러므로 elif가 else보다 더 느리다.
+"""

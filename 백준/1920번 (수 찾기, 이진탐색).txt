@@ -1,0 +1,33 @@
+N = int(input())
+num = list(map(int, input().split()))
+num.sort()
+
+K = int(input())
+find = list(map(int, input().split()))
+
+for i in range(0, len(find)):
+    start = 0
+    end = len(num)-1
+    mid = (start+end)//2
+    found = False
+    
+    while (start <= end):
+        if(find[i] < num[mid]):
+            end = mid-1
+            mid = (start+end)//2
+        elif(find[i] == num[mid]):
+            found = True
+            print(1)
+            break
+        else:
+            start = mid+1
+            mid = (start+end)//2
+    if(not found):
+        print(0)
+"""
+in 연산자는 시간복잡도가 O(N)이다.
+그래서 만약에 for문 안에 in연산자를 통해서 해당 숫자가 있는지 찾도록 하면
+총 시간복잡도가 O(N^2)가 된다. 그래서 이보다 시간복잡도를 줄여야하므로
+이진탐색을 통한 O(nlogn)으로 만들도록 한다.
+이때 멈춤조건은 start <= end가 된다.
+"""

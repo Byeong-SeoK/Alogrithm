@@ -1,0 +1,26 @@
+sentence = input()
+
+length = len(sentence)
+count = 0 #중복되지 않는 문자열 개수를 받는 변수
+
+"""
+ababc일 경우
+한자리, 두자리, 세자리.... 형태로 sentence를 조합하기 보다는 
+연속적인 sentence를 만들면 되는 것이므로
+start가 a일 때 a, ab, aba, abab, ababc
+start가 b일 때 b, ba, bab, babc
+...
+와 같은 과정을 거치면서 sentece를 만들면 된다.
+조합으로 만들어지는 sentence는 반드시 연속적인 문자의 조합이기 때문이다.
+위와 같이 문자를 조합해도 모든 경우가 다 만들어진다.
+다만, aac와 같이 비연속적인 상황에서는 사용할 수 없다는 단점이 있다.
+"""
+
+word = [] #조합된 string을 받는 배열이다.
+for i in range(0, len(sentence)):
+    for j in range(i, len(sentence)):
+        word.append(sentence[i:j+1])
+        #대괄호에서 : 오른쪽은 미만을 의미하므로 +1을 해주어야 한다.
+
+word = set(word)
+print(len(word))

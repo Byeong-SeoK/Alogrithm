@@ -1,0 +1,19 @@
+while True:
+    num = input()
+    if(num == '0'):
+        break
+        
+    start = 0
+    end = len(num)-1
+    find = True
+
+    while start < end:
+        if(num[start] != num[end]):
+            print("no")
+            find = False
+            break
+        start = start+1
+        end = end-1
+    
+    if(find):
+        print("yes")

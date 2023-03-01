@@ -1,0 +1,22 @@
+N = int(input())
+number = list(map(int, input().split()))
+
+count = 0
+for i in range(0, len(number)):
+    if(number[i] == 1):
+        continue
+    elif(number[i] == 2):
+        count = count+1
+    else:
+        find = False
+        for j in range(2, number[i]):
+            if(number[i]%j == 0):
+                find = False
+                break
+            else:
+                find = True
+                
+        if(find):
+            count = count+1
+            
+print(count)

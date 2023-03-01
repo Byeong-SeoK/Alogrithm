@@ -1,0 +1,68 @@
+sen = input()
+expression = [] #연산자와 숫자를 구분하여 저장하는 배열
+temp = ''
+
+#아래의 for문과 for문 바깥에 존재하는 append문을 통해서 수식을 분리 저장한다.
+for i in range(0, len(sen)):
+    if(sen[i] == '+' or sen[i] == '-'):
+        expression.append(temp)
+        temp = ''
+
+        expression.append(sen[i])
+    else:
+        temp = temp + sen[i]
+expression.append(temp)
+
+print(expression)
+
+"""
+55 - 50 + 40 + 20 - 10 + 60
+- 이후의 모든 +연산 들을 하나로 묶고
+이 묶는 과정의 끝은 또 다른 -가 나올 때 까지 이다.
+"""
+
+value = 0 #최종 값이 들어가는 변수
+stack = []
+#괄호 안의 연산 값을 저장할 스택
+#연산 값의 부호가 바뀔 때 stack이 비워진다.
+
+prev_operator = ''
+positive = True #양수인지 음수인지 받는 bool 변수
+
+for j in range(0, len(expression)):
+    if(expression[j] != '+' and expression[j] != '-'): #expression[j]가 숫자인 경우
+        stack.append(int(expression[j]))
+
+    elif(expression[j] == '+'): #expression[j]가 + 일 때
+        if(prev_operator == ''): #이전 연산자가 없는 경우
+            prev_operator = expression[j]
+
+    else: #expression[j]가 - 일 때
+        if(prev_operator == ''): #이전 연산자가 없는 경우
+            prev_operator = expression[j]
+            value = value + sum(stack) #이전 값들의 합은 양수에 해당
+            stack.clear() #부호가 바뀌므로 stack을 비운다.
+            positive = False
+
+        elif(prev_operator == expression): #이전 연산자도 - 인 경우 (-4-5 / -5-2 ...) 이때는 stack을 항상 비운다.
+            value = value - sum(stack) #이전 부호가 -이므로 빼기로 진행
+            stack.clear()
+
+        else: #이전 연산자가 + 인 경우 이때는 positive를 - 로 바꾼다. 마찬가지로 stack을 비운다.
+            if(positive == True):
+                value = value + sum(stack) #이때는 이전 부호가 + 이므로 더하기로 진행
+                stack.clear()
+                positive = False
+
+            else:
+                value = value - sum(stack)
+                stack.clear()
+
+#식은 항상 숫자로 끝나므로 for문에서 전부 처리할 수 없다.
+#그러므로 아래의 분기문에서 나머지를 처리한다.
+if(not positive):
+    value = value - sum(stack)
+else:
+    value = value + sum(stack)
+
+print(value)

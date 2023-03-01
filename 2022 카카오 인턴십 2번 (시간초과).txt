@@ -1,0 +1,45 @@
+def solution(queue1, queue2):
+    answer = 0
+
+    if(len(queue1) == 1):
+        if(queue1[0]==queue2[0]):
+            answer = 0
+        else:
+            answer = -1
+    else:
+        sum1 = 0
+        sum2 = 0
+        for i in range(0, len(queue1)):
+            sum1 = sum1 + queue1[i]
+            sum2 = sum2 + queue2[i]
+
+        count = 0
+        while True:
+            if(sum1 < sum2):
+                remove = queue2.pop(0)
+                queue1.append(remove)
+
+                sum1 = sum1+remove
+                sum2 = sum2-remove
+
+                count = count+1
+                answer = answer+1
+
+            elif(sum1 == sum2):
+                break
+            
+            else:
+                remove = queue1.pop(0)
+                queue2.append(remove)
+
+                sum1 = sum1 - remove
+                sum2 = sum2 + remove
+
+                count = count+1
+                answer = answer+1
+
+            if(count == len(queue1) + len(queue2)):
+                answer = -1
+                break
+
+    return answer

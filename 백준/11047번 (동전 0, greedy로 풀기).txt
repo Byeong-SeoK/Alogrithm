@@ -1,0 +1,26 @@
+N, K = map(int, input().split())
+#N은 가지고 있는 동전의 종류, K는 동전을 적절히 사용해서 만들어야하는 가치의 합이다.
+
+coin = []
+for i in range(0, N):
+    value = int(input())
+    coin.append(value)
+
+coin.sort(reverse= True)
+#greedy로 풀기 위해서 coin 배열을 내림차순으로 정렬시킨다.
+
+count = 0 #K라는 값을 만들기 위해서 필요한 동전의 개수
+for j in range(0, len(coin)):
+    if(coin[j] > K):
+        continue
+    elif(coin[j] == K):
+        count = count+1
+        break
+    else:
+        temp = K // coin[j]
+        #예를들어 4590원 일 때 1000원은 총 4개가 필요하다. 그리고 남는 돈은 590원이 된다.
+        #이러한 로직을 짜기위해서 //를 사용하여 몇개가 필요한지 구한다.
+        count = count+temp
+        K = K % coin[j] #남은 돈은 K를 coin[j]로 나눈 나머지와 동일하다.
+        
+print(count)

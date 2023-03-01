@@ -1,0 +1,17 @@
+N = int(input())
+dp = [0, 1, 2] #2*n 크기의 직사각형을 1*2, 2*1의 타일로 채우는 방법의 수를 저장한 배열
+"""
+규칙을 찾아보면
+0 1 2 3 4 5....
+0 1 2 3 5 8....
+순으로 dp[n] = dp[n-1]+ dp[n-2] 임을 알 수 있다.
+"""
+
+if(N <= 2):
+    print(dp[N])
+else:
+    for i in range(3, N+1):
+        temp = dp[i-1]+dp[i-2]
+        dp.append(temp)
+
+    print(dp[N] % 10007)

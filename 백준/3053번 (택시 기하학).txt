@@ -1,0 +1,6 @@
+import math
+r = int(input()) #원의 반지름을 받는 변수이다.
+print(r*r*math.pi)
+#math.pi를 통해서 원주율을 가져올 수 있다.
+print(r*r*2)
+#택시 기하학에서는 단순히 반지름의 제곱에 2를 곱한 것이 원이된다.

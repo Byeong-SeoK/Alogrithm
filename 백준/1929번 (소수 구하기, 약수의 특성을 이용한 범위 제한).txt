@@ -1,0 +1,55 @@
+import sys
+M, N = map(int, sys.stdin.readline().split())
+
+for i in range(M, N+1):
+    if(i == 1):
+        continue
+    elif(i == 2): #2는 예외처리를 해주어야 한다.
+	print(i)
+    elif(i == 3): #3도 예외 처리를 해주어야 한다.
+	print(i)
+	"""
+	2와 3을 예외처리 해주는 이유는 2, 3은 아래의 for문을 돌리면 int(i**0.5)+1에서 (2,2)가 되므로
+	for문이 돌지 않고 탈출해버리게 된다. 그래서 소수로 간주되지 않게 되므로 예외처리를 해야한다.
+	"""
+    else:
+        find = False
+        for j in range(2, int(i**0.5)+1):
+            """
+            우리는 약수의 특성을 활용해서 이 연산 횟수를 반으로 줄여줄 수 있다. 
+            여기서 말하는 약수의 특성이란, 특정 수 N의 약수들을 일렬로 나열했을 때 
+            그 중 가운데의 수를 중심으로 약수가 대칭된다는 것이다.
+            16을 예로 들어보자.16의 약수들을 일렬로 나열하면 1, 2, 4, 8, 16이 된다.
+            중간값 4를 기준으로 양 옆을 보면 약수들이 서로 대칭되고 있음을 확인할 수 있다. 
+            (1 * 16 = 16 * 1, 2 * 8 = 8 * 2) 다시말해, 만약 우리가 16의 약수를 찾고 싶다면 
+            16의 약수의 중간값을 기준으로 한 쪽만 검사를 하더라도 다른 쪽의 약수들을 알 수 있다.
+            여기서 중간값은 찾고자하는 수의 제곱근 값으로 가정해 처리할 수 있으며, 
+            이 제곱근 값을 기준으로 왼쪽에 약수가 하나도 존재하지 않는다면 
+            제곱근 값 기준 오른쪽에도 약수가 존재하지 않는다고 확신할 수 있다.
+            이를 통해 우리는 기존 for문이 2에서 N-1까지 돌았던 것을 
+            2에서 N의 제곱근까지만 돌도록 처리해주어 연산 횟수를 절반에 가깝게 줄여줄 수 있다.
+            """
+            if(i%j == 0):
+                find = False
+                break
+            else:
+                find = True
+        if(find):
+            print(i)
+
+
+======= 또다른 풀이 =======
+import sys
+M, N = map(int, sys.stdin.readline().split())
+
+def check_prime(num):
+    if num == 1: return False
+    else:
+        for i in range(2, int(num**0.5) + 1):
+            if num % i == 0:
+                return False
+        return True
+
+for i in range(M, N + 1):
+    if check_prime(i):
+        print(i)

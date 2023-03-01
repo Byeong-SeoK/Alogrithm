@@ -1,0 +1,49 @@
+import sys
+sys.setrecursionlimit(10000)
+
+def dfs(field, y, x):
+    global count
+    if(y < len(field) and x < len(field[0])):
+        if (field[y][x] == 0 or visited[y][x] == 1):
+            return
+        else:
+            visited[y][x] = 1
+            count = count+1
+            dfs(field, y+1, x) #아래쪽 칸이 1일 때 해당 칸에 접근
+            dfs(field, y, x+1)  # 오른쪽 칸이 1일 때 해당 칸에 접근
+    else:
+        return
+
+
+
+T = int(input())
+
+for i in range(0, T):
+    M, N, K = map(int, input().split())  # M은 가로, N은 세로, K는 배추의 개수
+    field = [[0 for _ in range(0, M)] for _ in range(0, N)]
+    visited = [[0 for _ in range(0, M)] for _ in range(0, N)]
+    part = []
+
+    for j in range(0, K):
+        x, y = map(int, input().split())
+        field[y][x] = 1
+
+    """
+    (0,0)에서 부터 배추가 존재하는지 찾아본다. 이때 한번 접근하는 밭의 위치는 (0,0) 아래에 있는 (1,0)
+    (0,0) 오른쪽에 있는 (0,1) 이렇게 2군데만 접근하고 해당 칸에 배추가 있으면 그 칸을 기준으로 또
+    아래와 오른쪽을 접근하는 dfs를 사용한다.
+    이때 dfs 중지 조건은
+    1. 오른쪽과 아래쪽 모두 0이 나왔을 때 중지한다.
+    2. 방문한 칸에 또 방문하려할 때 중지한다.    
+    """
+
+    for p in range(0, len(field)): #마지막째 줄은 더 이상 아래에 접근할 수 있는 공간이 없으므로 그 전 줄까지만 접근한다.
+        for q in range(0, len(field[p])): #각 줄의 마지막 칸은 더 이상 오른쪽으로 접근할 수 있는 공간이 없으므로 그 전 칸까지만 접근한다.
+            global count
+            count = 0  # 배추가 있는지 세는 변수
+            dfs(field, p, q)
+
+            if(count != 0):
+                part.append(count)
+
+    print(len(part))

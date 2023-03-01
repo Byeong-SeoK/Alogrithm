@@ -1,0 +1,37 @@
+import sys
+sys.setrecursionlimit(5000)
+
+def dfs(visit, graph, start):
+    visit[start] = 1
+    for end in graph[start]:
+        if(visit[end] != 1):
+            dfs(visit, graph, end)
+
+
+
+N, M = map(int, input().split()) #N은 정점의 개수, M은 간선의 개수를 의미한다.
+
+graph = [[] for _ in range(0, N+1)] #정점간 간선으로 연결 되어있는지 받는 2차원 배열 1이면 연결되어있는 것이다.
+
+for i in range(0, M):
+    x, y = map(int, input().split())
+    graph[x].append(y) #x->y간 간선이 존재
+    graph[y].append(x) #y->x간 간선이 존재
+
+
+visit = [0] * (N+1) #각 정점에 대해 방문 여부를 받는 배열
+count = 0 #연결 요소의 개수를 세는 변수
+
+for p in range(1, N+1):
+    if(visit[p] == 0): #해당 정점에 방문하지 않았으면 일단 방문한다.
+        if(len(graph[p]) != 0): #해당 정점에서 다른 정점으로 가는 간선이 존재하면 다른 정점에 방문한다.
+            dfs(visit, graph, p)
+            count = count+1
+        else: #해당 정점에서 다른 정점으로 가는 간선이 없으면 그 정점 하나가 연결 요소 하나가 된다.
+            count = count+1
+            visit[p] = 1 #해당 정점은 dfs함수를 통해서 방문하는 것이 아니고 for문을 통해서 방문한 것이므로 여기서 1로 바꾼다.
+
+
+
+
+print(count)

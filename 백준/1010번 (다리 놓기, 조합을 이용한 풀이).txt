@@ -1,0 +1,25 @@
+TC = int(input())
+
+for i in range(0, TC):
+    west, east = map(int, input().split())
+
+    # combination을 만드는 문제
+    # 이때 nCr에서 n이 east에 해당하고 r이 west에 해당한다.
+
+    multi_1 = 1 #west의 지역의 곱 값을 받는다.
+    for j in range(1, west+1):
+        multi_1 = multi_1 * j
+    #print(multi_1)
+
+    multi_2 = 1 #east의 지역의 곱 값을 받는다.
+    count = 0 #east 값에 대해서 곱은 조합이므로 west값이 의미하는 개수만큼 5 4 3... 이렇게 내려온다.
+    k = east #그러기 위해서 k에 east 값을 넣고 -1씩 한다. 다만 count == west가 되면 멈춘다.
+    while(count != west):
+        multi_2 = multi_2*k
+        k = k-1
+        count = count+1
+
+    #print(multi_2)
+
+
+    print(multi_2//multi_1)

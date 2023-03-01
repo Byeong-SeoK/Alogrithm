@@ -1,0 +1,26 @@
+def solution(people, limit):
+    answer = 0
+
+    if (len(people) == 1):
+        answer = 1
+    else:
+        people.sort(reverse=True)  # 내림차순으로 정렬
+
+        index = 1
+        for i in range(0, len(people)):
+            weight = people[i] + people[len(people) - index]
+            #양쪽 끝에서 하나씩 가운데로 접근
+            #이렇게 하는 이유 : 제일 무거운 사람과 제일 가벼운 사람의 무게 합이 무게 제한 보다
+            #크면 제일 무거운 사람은 다른 그 누군가와도 같이 갈 수 없게 된다.
+            #그래서 배열 접근 횟수를 줄이기 위해 가운데로 오도록 만든다.
+
+            if (i <= len(people) - index):
+                if (weight > limit): #무게합 > 무게 제한 이므로 제일 무거운 사람 한명만 보냄
+                    answer = answer + 1
+                else: #무게합 <= 무게 제한 이므로 제일 무거운 사람 + 제일 가벼운 사람으로 보냄
+                    answer = answer + 1
+                    index = index + 1
+            else: #i와 len(people)-index가 교차한 이후는 중복이므로 더 이상 의미가 없다.
+                break
+
+    return answer

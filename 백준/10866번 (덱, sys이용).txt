@@ -1,0 +1,43 @@
+import sys
+N = int(sys.stdin.readline())
+
+answer = []
+for i in range(0, N):
+    info = sys.stdin.readline().split()
+
+    if(info[0] == 'push_front'):
+        answer.insert(0, info[1])
+    elif(info[0] == 'push_back'):
+        answer.append(info[1])
+    elif(info[0] == 'pop_front'):
+        if(len(answer) != 0):
+            num = answer[0]
+            del(answer[0])
+            print(num)
+        else:
+            print(-1)
+    elif(info[0] == 'pop_back'):
+        if(len(answer) != 0):
+            num = answer.pop()
+            print(num)
+        else:
+            print(-1)
+    elif(info[0] == 'size'):
+        print(len(answer))
+    elif(info[0] == 'empty'):
+        if(len(answer) != 0):
+            print(0)
+        else:
+            print(1)
+    elif(info[0] == 'front'):
+        if(len(answer) != 0):
+            print(answer[0])
+        else:
+            print(-1)
+    elif(info[0] == 'back'):
+        if(len(answer) != 0):
+            print(answer[len(answer)-1])
+        else:
+            print(-1)
+    else:
+        continue

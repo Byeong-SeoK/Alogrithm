@@ -1,0 +1,19 @@
+import sys
+number1, number2 = map(int, sys.stdin.readline().split())
+
+pokemon_name = {} #포켓몬 이름: 인덱스 구조의 사전이다.
+pokemon_number = {} #인덱스: 포켓몬 이름 구조의 사전이다.
+for i in range(0, number1):
+    name = sys.stdin.readline().rstrip()
+    pokemon_name[name] = i+1
+    pokemon_number[i+1] = name
+
+for j in range(0, number2):
+    problem = sys.stdin.readline().rstrip()
+    
+    if(problem[0] < 'A'): 
+        #번호로 입력받았으므로 pokemon_number에서 해당 포켓몬의 이름을 찾는다.
+        print(pokemon_number[int(problem)])
+    else:
+        #이름으로 입력받았으므로 pokemon_name에서 해당 포켓몬의 번호를 찾는다.
+        print(pokemon_name[problem])

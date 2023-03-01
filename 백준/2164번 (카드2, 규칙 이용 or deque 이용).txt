@@ -1,0 +1,63 @@
+============== 규칙을 찾아 이용한 방법 ==============
+세 번째 문제 접근 방법은 저 출력 속에 일정한 규칙을 발견하여 공식을 찾는 방법이다.
+시간 복잡도 부분에선 이게 가장 최강이지만 난이도가 상당하다.
+ 
+INPUT -> 2 OUTPUT -> 2
+INPUT -> 3 OUTPUT -> 2
+INPUT -> 4 OUTPUT -> 4
+INPUT -> 5 OUTPUT -> 2
+INPUT -> 6 OUTPUT -> 4
+INPUT -> 7 OUTPUT -> 6
+INPUT -> 8 OUTPUT -> 8
+ 
+보이는가? 규칙이 존재한다. 분명히.
+OUTPUT을 유심히 보자. 성공한다면 시간 복잡도를 엄청나게 줄일 수 있다.
+ 
+3일 때 : (3 - 2) * 2 = 2
+4일 때 : (4 - 2) * 2 = 2
+5일 때 : (5 - 4) * 2 = 2
+6일 때 : (6 - 4) * 2 = 4
+7일 때 : (7 - 4) * 2 = 6
+8일 때 : (8 - 4) * 2 = 8
+ 
+[ INPUT - 2**(INPUT>2의 제곱) ] * 2이다.
+즉 INPUT보다 작은 수 중 가장 큰 2의 제곱이 저 2**뒤의 ()안에 들어간다.
+출처: https://tooo1.tistory.com/88 [개발자 퉁이리:티스토리]
+
+
+import sys
+N = int(sys.stdin.readline())
+
+if(N == 1):
+    print(1)
+elif(N == 2):
+    print(2)
+else:
+    """
+    규칙을 찾아보면 123 -> 2, 1234 -> 4, 12345 -> 2
+    123456 -> 4, 1234567 -> 6, 12345678 -> 8 123456789 -> 2
+    12345678910 -> 4, 1234567891011 -> 6 123456789101112 -> 8
+    즉, 2/24/2468/246810121416/...... 이런식으로 규칙성이 있다.
+    다만 1, 2를 처음에 따로 case 분류를 했으므로 입력이 3부터 시작
+    그래서 3일 때는 2가 나오고 4일 때는 4 이 지점부터 시작한다.
+    """
+    square = 2 #3을 입력한 case부터 시작이므로 square는 2가 된다.
+    while True:
+        square = square * 2
+        if (square >= N):
+            print((N - (square // 2)) * 2)
+            break
+
+
+============== deque를 이용한 방법 ==============
+from collections import deque
+
+N = int(input())
+deque = deque([i for i in range(1, N+1)])
+
+while(len(deque) >1):
+    deque.popleft()
+    move_num = deque.popleft()
+    deque.append(move_num)
+    
+print(deque[0])

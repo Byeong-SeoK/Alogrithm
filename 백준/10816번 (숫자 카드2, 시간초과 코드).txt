@@ -1,0 +1,46 @@
+import sys
+N = int(sys.stdin.readline()) #숫자 카드의 개수
+num = list(map(int, input().split()))#숫자 카드에 적혀있는 정수
+#num.sort() #num을 오름차순으로 정렬
+
+n = int(input()) #가지고 있는 숫자 카드의 개수
+candidate = list(map(int, sys.stdin.readline().split())) #가지고 있는 숫자 카드의 정수
+
+count = {} #숫자 카드에서 서로 다른 수가 각각 중복으로 몇개씩 있는지 받는 사전
+for i in num:
+    if(i in count):
+        count[i] = count[i]+1
+    else:
+        count[i] = 1
+
+num = sorted(set(num))
+#배열에서 중복된 수를 하나만 남기고 지운다.
+#그리고 집합에서는 배열에서의 요소들의 순서가 무시되므로
+#sorted를 통해서 오름차순으로 정렬시킨다.
+
+for j in range(0, len(candidate)):
+    #이진 탐색을 통해서 candidate 배열에 있는 숫자가 num 집합에 존재하는지 확인한다.
+
+    find = False #집합에서 candidate[j]값을 찾지 못한 경우
+    start = 0  #중복이 제거된 집합의 시작 index
+    end = len(num) - 1  #중복이 제거된 집합의 끝 index
+    mid = (start + end) // 2 #배열의 중앙 inodex
+
+    while(start <= end):
+        if(num[mid] > candidate[j]):
+            find = False
+            end = mid-1
+            mid = (start+end)//2
+        elif(num[mid] == candidate[j]):
+            find = True
+            print(count[candidate[j]], end=" ")
+            #집합에 존재한다면 중복된 개수가 몇개인지 받는 사전에서 해당 숫자의 값을
+            #찾아서 출력시키고 반복문을 탈출시킨다.
+            break
+        else:
+            find = False
+            start = mid+1
+            mid = (start+end)//2
+
+    if(not find): #candidate[j]가 원래 배열 내에 단 1개도 없는 경우
+        print(0, end=" ")

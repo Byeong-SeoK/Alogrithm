@@ -1,0 +1,41 @@
+import sys
+
+class Heap:
+	def __init__(self):
+		self.arr = []
+
+	def heapify_down(self, k, n):
+		while 2*k+1 < n:
+			L, R = 2*k+1, 2*k+2
+			if L < n and self.arr[L] < self.arr[k]: m = L
+			else: m = k
+			if R < n and self.arr[R] < self.arr[m]: m = R
+			if m != k:
+				self.arr[k], self.arr[m] = self.arr[m], self.arr[k]
+				k = m
+			else: break
+
+	def heapify_up(self, k):
+		while k > 0 and self.arr[(k-1)//2] > self.arr[k]:
+			self.arr[(k-1)//2], self.arr[k] = self.arr[k], self.arr[(k-1)//2]
+			k = (k-1)//2
+
+	def insert(self, key):
+		self.arr.append(key)
+		self.heapify_up(len(self.arr)-1)
+
+	def delete_min(self):
+		if len(self.arr) == 0: return "0"
+		self.arr[0], self.arr[-1] = self.arr[-1], self.arr[0]
+		key = self.arr.pop()
+		self.heapify_down(0, len(self.arr))
+		return str(key)
+
+N = int(sys.stdin.readline())
+heap = Heap()
+output = []
+for i in range(N):
+	x = int(sys.stdin.readline())
+	if x: heap.insert(x)
+	else: output.append(heap.delete_min())
+print("\n".join(output))

@@ -1,0 +1,7 @@
+def Jaden_Case(s):
+    # 함수를 완성하세요
+    return s.title()
+
+# 아래는 테스트로 출력해 보기 위한 코드입니다.
+print(Jaden_Case("3people unFollowed me for the last week"))
+#title함수를 사용하면 알아서 숫자를 판별해준다.

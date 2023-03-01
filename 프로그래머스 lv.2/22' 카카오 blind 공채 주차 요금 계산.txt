@@ -1,0 +1,47 @@
+import math
+def solution(fees, records):
+    answer = []
+    
+    car = {} #차량의 출입 시간이 들어가는 사전
+    IO = {} #차량의 출입 여부가 들어가는 사전
+    
+    for i in records:
+        i = i.split(' ')
+        if(car.get(i[1]) == None): #해당 차량 번호가 사전에 없을 경우
+            car[i[1]] = [i[0]]
+            IO[i[1]] = [i[2]] 
+            #car과 IO는 항상 동일한 길이이다. 그래서 IO만의 조건을 줄 필요X
+        else:
+            car[i[1]].append(i[0])
+            IO[i[1]].append(i[2])
+    
+    for j in car:
+        length = len(car[j])
+        if(length % 2 != 0):
+            car[j].append("23:59")
+            IO[j].append("OUT")
+        else:
+            continue
+    
+    for m in car:
+        total = 0
+        for n in range(0, len(car[m]), 2):
+            hour = int(car[m][n+1][0:2]) - int(car[m][n][0:2]) #누적 시
+            minute = int(car[m][n+1][3:]) - int(car[m][n][3:]) #누적 분
+            total = total+ hour*60+minute 
+            #분 같은 경우 음수가 나오는 경우가 있어서 시*60+분을 하여 단위를 분으로 바꾼다.
+            
+        if(total <= fees[0]): #기본 요금인 경우
+            car[m] = fees[1]
+        else: #기본 요금보다 더 많이 나온 경우
+            fee = fees[1] + math.ceil((total-fees[0])/fees[2])*fees[3]
+            car[m] = fee
+            
+    temp = sorted(car.items()) 
+    #sorted와 items 내장함수를 통해서 dict을 오름차순으로 정렬할 수 있고 이를 temp로 받는다.
+    #이때 (key, item) 튜플 형태가 원소로 구성된 배열이 temp에 들어가게 된다.
+    
+    for k in temp:
+        answer.append(k[1])
+    
+    return answer

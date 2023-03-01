@@ -1,0 +1,38 @@
+def solution(word):
+    answer = 0
+    alphabet = ['A','E','I','O','U']
+    max = 0 #가능한 경우의 최댓값
+    
+    length = len(word)
+    if(length < 5):
+        for i in range(0, 5):
+            word = word+'N'
+            #I를 INNNN으로 만들어주는 것이다.
+            #이때 N은 비어있는 값을 의미한다.
+    
+    """
+    A(n) = 5*A(n-1)+1의 관계를 갖고 있다.
+    word의 "ABCDE"에서 
+    E에는 총 6가지 (A,E,I,O,U,NONE)
+    D에는 총 31가지
+    C에는 총 156가지
+    B에는 총 781가지가 들어갈 수 있다.
+    그래서 위의 점화식 관계를 갖고 있음을 알 수 있다.
+    역으로 A(n-1) = (A(n)-1) / 5 이다.
+    """
+    
+    for i in range(0, 5):
+        max = max*5+1
+        #word의 길이가 5이하 이므로 0에서 5까지의 범위를 갖지만
+        #만약에 word의 길이가 더 길었으면 5를 더 긴 값으로 넣으면 된다.
+    
+    for j in range(0, length):
+        for k in range(0, len(alphabet)):
+            if(word[j] > alphabet[k]): #E>A 같은 경우
+                answer = answer+max
+            else:
+                answer = answer+1 #E=E일때도 1가지 경우에 해당하므로 +1을 한다. 
+                max = (max-1)/5
+                break
+    
+    return answer

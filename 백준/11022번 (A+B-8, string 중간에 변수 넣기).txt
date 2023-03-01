@@ -1,0 +1,7 @@
+cases = int(input())
+
+for i in range(cases):
+    a,b = map(int, input().split())
+    ans = a + b
+    print("Case #%s: %s + %s = %s"%(i+1, a, b, ans ))
+    #파이썬에서 string안에 특정 값을 집어넣을 때 %을 사용한다.

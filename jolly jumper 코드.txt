@@ -1,0 +1,49 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+ int cnt = 0;
+ int i=0;
+      int j=0;
+      int numberOfCases=0;
+      cin >> numberOfCases;
+ for (j=0; j<numberOfCases; j++)
+ {
+  int prev;
+  int cur;
+                cin >> cnt;
+  cin >> prev;
+  bool jolly = true;
+  bool* unchecked = new bool[cnt];
+  for(i=0; i<cnt; i++)
+  {
+   unchecked[i] = true;
+  }
+  for(i=0; i< cnt-1; i++)
+  {
+   cin >> cur;
+   int diff = abs(prev-cur);
+   if(diff > cnt-1 || !unchecked[diff])
+   {
+    jolly = false;
+    break;
+   }
+   unchecked[diff] = false;
+   prev = cur;
+  }
+  char line[2048];
+  cin.getline(line,2048);
+  if(jolly) cout << "Jolly" << endl;
+  else cout << "Not jolly" << endl;
+  
+  // if(jolly) cout << "  Jolly" << endl;  Jolly 앞에 공백이 있어 오답처리 됨
+  // else cout << "Not  jolly" << endl;  Not과 Jolly 사이에 공백이 많아 오답처리 됨
+  
+  cin.clear();
+  delete[] unchecked;
+ }
+ 
+ return 0;
+}

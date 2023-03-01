@@ -1,0 +1,28 @@
+"""
+point배열의 서로 다른 값을 사전의 key로 그리고 point 배열을 복사하여
+그 복사한 배열을 오름차순으로 정렬한 다음
+각 값들의 index값을 사전의 각 key값의 value로 준다.
+그리고 point 배열에 대해 for문을 돌려서 각 값에 대해
+사전에서의 value가 무엇인지 출력하게 한다.
+위와 같은 방법이 hash를 이용한 방법이다.
+"""
+N = int(input())
+point = list(map(int, input().split()))
+
+temp = set(point[:])
+temp = list(sorted(temp))
+#point를 정렬시키기위해 받은 임시 배열
+#깊은 복사를 통해 point 배열과 똑같은 배열을
+#하나 더 만들어 point가 sort에 의해 변하지 않도록 한다.
+#그리고 중복을 제거하도록 한다. 하지만 집합은 index가 없으므로
+#집합을 통해 중복을 제거했던 것을 다시 배열로 만들어준다.
+
+point_zip = {}
+for i in range(0, len(temp)):
+    if(temp[i] not in point_zip):
+        point_zip[temp[i]] = i
+    else:
+        continue
+
+for j in point:
+    print(point_zip[j], end=" ")

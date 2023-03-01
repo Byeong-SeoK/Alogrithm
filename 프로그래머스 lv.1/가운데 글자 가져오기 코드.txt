@@ -1,0 +1,18 @@
+#include <string>
+
+using namespace std;
+
+string solution(string s) {
+    string answer = "";
+    int len = s.length();
+    int mid = len / 2;
+    
+    if(len % 2 != 0){
+        answer = s[mid];
+    }
+    else{
+        answer = answer + s[mid - 1] + s[mid];
+    }
+    
+    return answer;
+}

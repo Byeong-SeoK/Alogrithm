@@ -1,0 +1,43 @@
+def solution(alp, cop, problems):
+    answer = 0
+
+    alp_d = 0 #alp_req - alp
+    cop_d = 0 #cop_req - cop
+    for i in range(0, len(problems)-1):
+        if(i == 0):
+            alp_d = problems[i][0] - alp
+            cop_d = problems[i][1] - cop
+
+            if(alp_d != 0 or cop_d != 0):
+                if(alp_d > 0):
+                    alp = alp + alp_d
+                
+                if(cop_d > 0):
+                    cop = cop + cop_d
+
+                if(alp_d < cop_d):
+                    answer = answer+cop_d
+                else:
+                    answer = answer+alp_d
+        else:
+            alp_d = problems[i][0] - alp
+            cop_d = problems[i][1] - cop
+
+            time1 = 0
+            time2 = 0
+            if(alp_d > 0):
+                time1 = round(alp_d  / problems[i-1][2])
+
+            if(cop_d > 0):
+                time2 = round(cop_d / problems[i-1][3])
+
+            if(time1 < time2):
+                alp = alp + time2 * problems[i-1][2]
+                cop = cop + time2 * problems[i-1][3]
+                answer = time2 * problems[i-1][4]
+            else:
+                alp = alp + time1 * problems[i-1][2]
+                cop = cop + time1 * problems[i-1][3]
+                answer = time1 * problems[i-1][4]        
+
+    return answer

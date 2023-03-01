@@ -1,0 +1,73 @@
+def solution(n):
+    answer = 0
+
+    n_bin = format(n, 'b') #n의 이진수 변환 값(string type)
+    item = list() #string 수정을 위해서 n_bin각각의 값을 저장하는 리스트
+    count = 0 #n_bin에서 1의 갯수 count
+    for i in range(0, len(n_bin)):
+        if(n_bin[i] == '1'):
+            count = count + 1
+            item.append(n_bin[i])
+        else:
+            item.append(n_bin[i])
+            continue
+    
+    length = len(n_bin)
+    
+    if(count == length): #모든 비트가 다 1인 경우 2번째 index가 0이면 된다.
+        item.append('1')
+        item[1] = '0'
+    
+    elif(count == 1):
+        item.append('0')
+    
+    elif(length-count == 1 and item[length-1] == '0'):
+        item.append('0') #1110 -> 10000 형태로 바꾸기 위해 먼저 비트 한개를 추가한것
+        
+        for m in range(1, len(item)):
+            item[m] = '0' #1110 -> 10000으로 만들기 위해 제일 앞을 제외하고 0으로 만드는 과정
+        i_count = 1 #따라서 현재 비트에서 남은 1의 갯수는 1개
+        
+        k = len(item) - 1 #제일 오른쪽 끝의 index값
+        while(k != 0):
+            if(item[k] == '0'):
+                item[k] = '1'
+                k = len(item) - 1
+                i_count = i_count + 1
+                
+                if(i_count == count):
+                    break
+                
+            else:
+                item[k] = '0'
+                i_count = i_count - 1
+                k = k - 1
+        
+        
+        
+    
+    else: #그렇지 않을 경우 오른쪽에서부터 차례대로 접근하여 계산
+        k = len(item) - 1 #제일 오른쪽 끝의 index값
+        i_count = count #item에서의 1의 갯수
+        while(k != 0):
+            if(item[k] == '0'):
+                item[k] = '1'
+                k = len(item) - 1
+                i_count = i_count + 1
+                
+                if(i_count == count):
+                    break
+                
+            else:
+                item[k] = '0'
+                i_count = i_count - 1
+                k = k - 1
+                
+        
+    temp = ''
+    for j in range(0, len(item)):
+        temp = temp + item[j]
+    
+    answer = int(temp, 2)
+    
+    return answer

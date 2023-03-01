@@ -1,0 +1,28 @@
+def solution(s):
+    answer = -1
+    
+    if(len(s) == 0):
+        return 0
+    elif(len(s) % 2 == 1):
+        return 0
+    else:
+        temp = []
+        for i in range(0, len(s)):
+            if(len(temp) == 0): #현재 배열에 아무것도 없으므로 값을 넣는다.
+                temp.append(s[i])
+            else:
+                item = temp.pop() #배열에 있는 값을 지운 다음 넣으려는 값과 비교
+                
+                if(item == s[i]): #값이 같으면 지워야하므로 그대로 진행
+                    continue
+                else: #값이 다르면 지운 값도 넣고 새로 넣으려는 값도 넣는다.
+                    temp.append(item)
+                    temp.append(s[i])
+        
+        if(len(temp) == 0): #배열의 길이가 0이라는 뜻은 모든 값들이 짝지어 제거되었다는 뜻이다.
+            answer = 1
+        else: #배열의 길이가 0이 아니라는 것은 짝지어지지 못한 값이 있다는 뜻이다.
+            answer = 0
+            
+            
+    return answer

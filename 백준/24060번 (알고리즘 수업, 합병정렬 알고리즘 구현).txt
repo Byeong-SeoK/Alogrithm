@@ -1,0 +1,56 @@
+def merge_sort(arr, start, end): #파라미터로 배열을 받는데 이때 배열의 범위도 파라미터로 받는다.
+    if(start < end and count <= K):
+        mid = (start + end) //2 #합병 정렬을 하기 위해서 범위를 절반으로 줄인다.
+        merge_sort(arr, start, mid) #start ~ mid까지 범위의 배열을 합병 정렬한다.
+        merge_sort(arr, mid+1, end) #mid+1 ~ end까지 범위의 배열을 합병 정렬한다.
+        merge(arr, start, mid, end) #합병 정렬을 위해 쪼개진 배열들을 하나로 합친다.
+
+def merge(arr, start, mid, end):
+    #분리된 배열을 하나로 합치기 위한 함수이다.
+    #적어도 2개의 배열을 하나로 합치므로 첫번째 배열의 시작점과 끝점
+    #두번째 배열의 시작점(첫 번째 배열의 시작점)과 끝점을 파라미터로 받아야한다.
+
+    global count, result #count는 K번째 저장되는 여부를 세는 변수이고 result는 그 K번째 저장되는 수의 값을 받는 변수이다.
+    i = start #병합하려는 첫번째 배열의 시작점에 해당한다.
+    j = mid+1 #병합하려는 두번째 배열의 시작점에 해당한다.
+    t = 0 #두개의 배열을 하나로 합병하는 결과 배열의 index에 해당
+
+    temp = [] #두 개의 배열을 하나로 합친 배열에 해당한다.
+
+    while (i <= mid and j <= end): #일단 전체적으로 합병 정렬을 진행한다.
+        if(arr[i] <= arr[j]):
+            temp.append(arr[i])
+            i = i+1
+        else:
+            temp.append(arr[j])
+            j = j+1
+
+    while(i <= mid): #왼쪽 배열 부분에 아직 합병 정렬하지 못한 값이 남은 경우
+        temp.append(arr[i])
+        i = i+1
+
+    while(j <= end): #오른쪽 배열 부분에 아직 합병 정렬하지 못한 값이 남은 경우
+        temp.append(arr[j])
+        j = j+1
+
+    i = start
+    t = 0
+
+    while(i <= end): #배열 arr에 K번째 저장되는 수를 찾는 반복문이다.
+        arr[i] = temp[t]
+        count = count + 1
+        if(count == K):
+            result = arr[i]
+            break
+
+        i = i+1
+        t = t+1
+
+N, K = map(int, input().split())
+arr = list(map(int, input().split()))
+
+count = 0
+result = -1
+
+merge_sort(arr, 0, N-1)
+print(result)

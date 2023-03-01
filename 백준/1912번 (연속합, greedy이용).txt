@@ -1,0 +1,20 @@
+import sys
+case = int(sys.stdin.readline())
+
+number = list(map(int, sys.stdin.readline().split()))
+
+"""
+연속된 숫자의 합이 최대가 되어야 하는 것이므로
+5
+-1 -2 -3 -4 -5 인 경우
+-1/-2/-3/-4/-5 --> 하나씩 끊은 경우
+-3/-5/-7/-9 --> 연속적인 2개씩 끊은 경우
+....
+이렇게 해서 모든 경우 중 가장 큰 값을 찾는다.
+"""
+
+SUM = [] #각 연속적인 수의 합을 넣는 배열
+for i in range(0, len(number)):
+    for j in range(i, len(number)):
+        SUM.append(sum(number[i:j+1]))
+print(max(SUM))

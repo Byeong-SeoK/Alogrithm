@@ -1,0 +1,12 @@
+import sys
+N = int(sys.stdin.readline())
+
+point = []
+for i in range(0, N):
+    coordinate = list(map(int, sys.stdin.readline().split()))
+    point.append(coordinate)
+    
+point.sort(key= lambda x: (x[1],x[0]))
+
+for j in point:
+    print(j[0], j[1])

@@ -1,0 +1,54 @@
+def solution(citations):
+    answer = 0
+    
+    total = len(citations) #발표한 논문의 수
+    citations.sort(reverse= True) #논문 인용 횟수 내림차순 정렬
+    
+    
+    max_num = citations[0] #최고로 많이 인용된 논문의 인용 횟수
+    min_num = citations[total-1] #가장 적게 인용된 논문의 인용 횟수
+    
+    h_index = 0 #H_index 값에 해당
+    index = 0 #배열의 인덱스 번호
+    
+    if(max_num == 0): #모든 논문 인용 횟수가 0일 때
+        answer = 0
+        return answer
+    
+    if(min_num > total): #가장 적게 인용된 논문의 횟수 값이 배열의 길이 보다 클 때
+        answer = total #h_index는 배열의 길이 값과 같아진다.
+        return total
+          
+    while True:
+        if(h_index < citations[index]):
+            h_index = h_index + 1
+            index = index + 1
+        else:
+            answer = h_index
+            break
+    
+    """
+    위의 while문 설명
+    
+    왼쪽 예시 citations를 내림차순으로 정렬하여 [6,5,3,1,0]으로 만들었다.
+    그리고 while문 안에서 이 배열을 차례로 접근하고 h_index값은 1씩 증가시켜
+    최종 h_index 값을 구한다.
+    
+    즉
+    6 > 0
+    5 > 1
+    3 > 2
+    1 < 3 ---> h_index = 3 을 return
+    
+    이때 h_index값이 citations[index] 값보다 크거나 같아지게 되면 while문을 중단하고
+    그때의 h_index 값을 리턴하도록 한다.
+    """
+
+                       
+    return answer
+
+"""
+예시 case
+[1,3,7,8,9,10]
+h_index : 4
+"""

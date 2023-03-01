@@ -1,0 +1,19 @@
+def solution(numbers):
+    answer = -1
+
+    sum = 0
+    for i in range(0, 10):
+        find = False
+        for j in numbers:
+            if(i == j):
+                find = True
+                break
+            else:
+                continue
+
+        if(not find):
+            sum = sum + i
+
+    answer = sum
+
+    return answer

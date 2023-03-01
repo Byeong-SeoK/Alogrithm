@@ -1,0 +1,30 @@
+vector<int> solution(vector<int> numbers) {
+    vector<int> answer;
+    string temp = "";
+
+    for (int i = 0; i < numbers.size() - 1; i++) {
+        for (int j = i + 1; j < numbers.size(); j++) {
+            int num = numbers[i] + numbers[j];
+
+            if (temp == "") {
+                temp = temp + char(num);
+            }
+            else {
+                if (temp.find(char(num)) != -1) {
+                    continue;
+                }
+                else {
+                    temp = temp + char(num);
+                }
+            }
+        }
+    }
+
+    sort(temp.begin(), temp.end());
+
+    for (int k = 0; k < temp.length(); k++) {
+        answer.push_back(int(temp[k]));
+    }
+
+    return answer;
+}

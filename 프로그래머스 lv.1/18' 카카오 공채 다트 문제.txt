@@ -1,0 +1,70 @@
+#include <string>
+#include <vector>
+#include "cmath"
+
+using namespace std;
+
+int solution(string dartResult) {
+    int answer = 0;
+    vector<int> num; //점수 벡터
+    vector<char> action; //동작 벡터
+
+    string temp = ""; //char를 숫자로 바꾸어줄때 거쳐갈 임시 변수
+    for (int i = 0; i < dartResult.size(); i++) {
+        if (dartResult[i] >= '0' && dartResult[i] <= '9') { //숫자만 따로 뽑아내기
+            temp = temp + dartResult[i];
+        }
+        else { //문자 일때 temp를 int로 데이터 변환하고 문자만 따로 벡테에 넣기
+            action.push_back(dartResult[i]);
+
+            if (temp != "") {
+                int t = stoi(temp); //int로 string, char를 데이터 변환
+                num.push_back(t);
+                temp = "";
+            }
+            else {
+                continue;
+            }
+        }
+    }
+
+    int index = 0; //num벡터의 stackpointer역할
+    for (int j = 0; j < action.size(); j++) {
+        if (action[j] == 'S') {
+            num[index] = pow(num[index], 1);
+            index++; //num의 다음 index로 넘아가기
+	            //왜냐하면 num벡터와 action벡터의 길이가 다르기 때문
+        }
+        else if (action[j] == 'D') {
+            num[index] = pow(num[index], 2);
+            index++;
+        }
+        else if (action[j] == 'T') {
+            num[index] = pow(num[index], 3);
+            index++;
+        }
+        else if (action[j] == '*') { //특별 옵션 행동에 있어서는 굳이 index를 다음으로 넘길 필요X
+            if (index < 1) {
+                num[index - 1] = num[index - 1] * 2;
+            }
+            else {
+                num[index - 1] = num[index - 1] * 2;
+                num[index - 2] = num[index - 2] * 2;
+            }
+        }
+        else if (action[j] == '#') {
+            num[index - 1] = num[index - 1] * (-1);
+        }
+        else {
+            continue;
+        }
+    }
+
+
+    for (int k = 0; k < num.size(); k++) { //num에는 최종적으로 바뀐 값들이 저장됨
+        answer = answer + num[k];
+    }
+
+
+    return answer;
+}

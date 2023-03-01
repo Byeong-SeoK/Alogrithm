@@ -1,0 +1,41 @@
+def solution(n, arr1, arr2):
+    answer = []
+
+    for i in range(0, len(arr1)):
+        arr1[i] = format(arr1[i], 'b')
+
+
+    for a in range(0, len(arr1)):
+        if(len(arr1[a]) == n):
+            continue
+        else:
+            arr1[a] = arr1[a].zfill(n)
+
+
+
+    for j in range(0, len(arr2)):
+        arr2[j] = format(arr2[j], 'b')
+        length = len(arr2[j])
+
+
+
+    for b in range(0, len(arr2)):
+        if(len(arr2[b]) == n):
+            continue
+        else:
+            arr2[b] = arr2[b].zfill(n)
+
+    temp = ''
+    for m in range(0, len(arr1)):
+        for n in range(0, len(arr1[m])):
+            if(arr1[m][n] != arr2[m][n]):
+                temp = temp + '#'
+            elif(arr1[m][n] == arr2[m][n] and arr1[m][n] == '0'):
+                temp = temp + ' '
+            else:
+                temp = temp + '#'
+        answer.insert(m, temp)
+        temp = ''
+
+
+    return answer

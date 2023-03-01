@@ -1,0 +1,13 @@
+T = int(input())
+
+dp = [0]*100
+dp[0] = dp[1] = dp[2] = 1
+
+for i in range(0, T):
+    N = int(input())
+    
+    for j in range(3, N):
+        dp[j] = dp[j-2]+dp[j-3]
+        #직접 일일히 나열해보면 위와 같은 규칙성을 띄는 것을 알 수 있다.
+        
+    print(dp[N-1])

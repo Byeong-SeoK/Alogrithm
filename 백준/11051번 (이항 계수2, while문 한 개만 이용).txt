@@ -1,0 +1,18 @@
+N, K = map(int, input().split())
+
+count = 0 #N부터 K개의 숫자까지 내림차순 곱을 구하기 위해 있는 변수이다.
+number = 1#분모에 들어가는 곱을 구하기 위해 1부터 K까지 오름차순으로 올라가는 값이다.
+mult = 1 #분자에 올라가는 곱을 구하기 위한 변수
+mult2 = 1 #분모에 올라가는 곱을 구하기 위한 변수
+while(count != K):
+    mult = mult*N
+    N = N-1
+    #분자에 올라가는 곱을 구하기 위한 것이다.
+
+    mult2 = mult2*number
+    number = number+1
+    #분모에 올라가는 곱을 구하기 위한 것이다.
+
+    count = count+1
+
+print((mult//mult2)%10007)

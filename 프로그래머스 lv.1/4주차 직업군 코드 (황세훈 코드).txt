@@ -1,0 +1,107 @@
+#include <string>
+#include <algorithm>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+string solution(vector<string> table, vector<string> languages, 
+                vector<int> preference) {
+    string answer = "";
+    vector <int> job_score={0,0,0,0,0};
+    string single_language;
+    int prefer_score;
+    
+    //점수 합산 -> job_score에 추가시키기
+    for(int i=0; i<languages.size(); i++){
+        single_language = languages[i];  //python
+        prefer_score=preference[i];    //7
+        
+        for(int j=0; j<table.size(); j++){
+            string table_word="";
+            int table_score=6;
+            
+            for(int k=0; k<table[j].size(); k++){
+                if( table[j][k]==' '){
+                    if(table_word==single_language){
+                        job_score[j]+=(table_score*prefer_score);
+                        break;
+                    }
+                    table_word="";
+                    table_score--;
+                }
+                else if (k==table[j].size()-1){
+                     table_word.push_back(table[j][k]);
+                    if(table_word==single_language){
+                        job_score[j]+=(table_score*prefer_score);
+                        break;
+                    }
+                    table_word="";
+                    table_score--;
+                }
+                else{
+                    table_word.push_back(table[j][k]);
+                }
+            }
+        }
+    }
+   
+    //job_score 에서 index 찾기
+    int max=-100;
+    int max_index;
+    
+    string a;
+    string b;
+    string a_word;
+    string b_word;
+    vector <string> result;
+    
+    
+    for(int i=0; i<job_score.size(); i++){
+        if(max<job_score[i]){
+            max=job_score[i];
+            max_index=i;
+        }
+        else if(max==job_score[i]){ //사전식 비교
+            //max_index ,  i 
+            a= table[max_index];
+            b= table[i];
+            a_word="";
+            b_word="";
+            result={};
+            for(int j=0; j<a.size(); j++){
+                if(a[j]==' '){
+                    break;
+                }
+            a_word.push_back(a[j]);
+            }
+            result.push_back(a_word);
+            for(int j=0; j<b.size(); j++){
+                if(b[j]==' '){
+                    break;
+                }
+            b_word.push_back(b[j]);
+            }
+            result.push_back(b_word);
+            
+            sort(result.begin(), result.end());
+            if(result[0]==b_word){
+                max=job_score[i];
+                max_index=i;
+                
+            }
+        }
+    }
+   
+    //해당 index에서 답 추출
+    string answer_string = table[max_index];
+    for(int i=0; i<answer_string.size(); i++){
+        if(answer_string[i]==' '){
+            break;
+        }
+        answer.push_back(answer_string[i]);
+    }
+    
+    return answer;
+    
+}

@@ -1,0 +1,43 @@
+======= 이진 탐색을 이용한 풀이 =======
+import sys
+N = int(sys.stdin.readline())
+number = list(map(int, sys.stdin.readline().split()))
+number.sort()
+
+M = int(sys.stdin.readline())
+find = list(map(int, sys.stdin.readline().split()))
+
+for i in range(0, len(find)):
+    start = 0
+    end = len(number)-1
+    mid = (start+end)//2
+    
+    found = False
+    while (start <= end):
+        if(number[mid] == find[i]):
+            found = True
+            print(1, end=" ")
+            break
+        elif(number[mid] < find[i]):
+            start = mid+1
+            mid = (start+end)//2
+        else:
+            end = mid-1
+            mid = (start+end)//2
+    if(not found):
+        print(0, end=" ")
+
+
+
+======= 또 다른 풀이 =======
+set을 이용한 풀이이다.
+input()
+n = set(map(int, input().split()))
+print(n)
+input()
+m = list(map(int, input().split()))
+for i in m:
+    if i in n:
+        print(1, end=' ')
+    else:
+        print(0, end=' ')

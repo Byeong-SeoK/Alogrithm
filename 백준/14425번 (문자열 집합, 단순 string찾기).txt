@@ -1,0 +1,16 @@
+import sys
+
+N, M = map(int, sys.stdin.readline().split())
+
+Set = []
+for i in range(0, N):
+    Set.append(sys.stdin.readline().rstrip())
+
+count = 0
+for j in range(0, M):
+    word = sys.stdin.readline().rstrip()
+
+    if (word in Set):
+        count = count + 1
+
+print(count)

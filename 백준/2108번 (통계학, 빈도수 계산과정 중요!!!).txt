@@ -1,0 +1,78 @@
+import sys
+
+#입력
+N = int(sys.stdin.readline())
+
+number = []
+for i in range(0, N):
+    temp = int(sys.stdin.readline())
+    number.append(temp)
+
+
+#범위
+Max = max(number)  # 최대값
+Min = min(number)  # 최소값
+Range = 0
+
+if(Max < 0 and Min < 0): #둘다 음수인 경우 절댓값 Min이 절댓값 Max보다 더 큰 값이다.
+    Range = abs(Min) - abs(Max)
+elif(Max > 0 and Min < 0):
+    Range = Max + abs(Min)
+else:
+    Range = Max - Min
+
+
+#평균
+average = round(sum(number) / N)  # 평균
+
+
+#중앙값
+number.sort()  # 중앙값을 찾기 위해 배열 오름차순으로 정렬
+start = 0 #number배열의 시작
+last = len(number) - 1 #number배열의 끝
+mid = (start + last) // 2  # 중앙값의 index번호
+medium = number[mid]  # 중앙값
+
+
+#빈도수
+count = {} #각 숫자가 몇번씩 반복되었는지를 받는 사전
+for j in range(0, N):
+    if number[j] in count:
+        count[number[j]] = count[number[j]]+1
+    else:
+        count[number[j]] = 1
+
+frequency = [] #빈도수가 가장 높은 수 혹은 수들을 저장하는 배열
+fre = 0
+for p in count:
+    if(count[p] > fre): #빈도수가 더 큰 경우
+        fre = count[p]
+
+        if(len(frequency) == 0):
+            frequency.append(p)
+        else: 
+            #frequency에 존재한 숫자 보다 더 빈번하게 등장한 숫자가 있으므로
+            #frequency에 존재한 숫자는 더 이상 의미가 없다.
+            #그러므로 frequency 배열을 비우고 더 빈번한 숫자를 배열에 넣는다.
+            
+            frequency.clear()
+            frequency.append(p)
+    elif(count[p] == fre):
+        #frequency에 존재한 숫자와 같은 정도의 빈번함이므로 해당 숫자도 배열에 넣는다.
+        #그리고 나중에 두번째로 큰 숫자가 무엇인지 확인하여 그 숫자를 출력하도록 한다.
+        frequency.append(p)
+    else:
+        continue
+
+frequecnt_number = 0 #빈도수가 높은 수를 받는 변수
+if(len(frequency) == 1): #빈도수가 가장 높은 수가 하나인 경우
+    frequecnt_number = frequency[0]
+else: #빈도수가 가장 높은 수가 여러 개인 경우
+    frequecnt_number = frequency[1]
+
+
+#출력
+print(average)
+print(medium)
+print(frequecnt_number)
+print(Range)

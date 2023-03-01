@@ -1,0 +1,12 @@
+"""
+숫자 자체를 오름차순 내지 내림차순으로 정렬할 때는
+10씩 나누어서 일일이 비교하여 정렬하는 것보다
+아예 string으로 입력을 받은 다음 sorted로 정렬 후
+다시 하나의 string으로 만드는 것이 시간복잡도가 더 낮다.
+"""
+N = input()
+num = sorted(N, reverse=True)
+answer = ""
+for i in num:
+    answer = answer+i
+print(answer)

@@ -1,0 +1,47 @@
+def divide(x, y, N):
+    #x는 색종이 시작점의 행 값, y는 색종이 시작점의 열 값
+    #N은 색종이 의 가로 세로 길이를 의미한다.
+
+    global blue, white
+    color = paper[x][y] #해당 위치의 색종이 색깔
+    for p in range(x, x+N):
+        for q in range(y, y+N):
+            if(color != paper[p][q]):
+                divide(x, y, N//2)
+                #색이 다르면 색종이를 절반으로 분할하여 탐색한다
+                #즉, 1사분면에 해당하는 곳을 탐색한다.
+
+                divide(x, y+N//2, N//2)
+                #위의 divide를 탈출했다는 것은 색이 같아졌다는 것을 의미한다.
+                #위의 divide 범위 바로 옆 열의 사각형에 대해 N//2 만큼 분할한 범위에 대해 탐색한다.
+                #즉, 2사분면에 해당하는 곳을 탐색한다.
+
+                divide(x+N//2, y, N//2)
+                #위의 divide에서 옆 열의 사각형에 대해 탐색했다면 여기서는 아래 범위에 있는 사각형에 대해 탐색한다.
+                #즉, 3사분면에 해당하는 곳을 탐색한다.
+
+                divide(x+N//2, y+N//2, N//2)
+                #마지막 사각형이 대각선 아래의 범위에 있는 사각형을 탐색한다.
+                #즉, 4사분면에 해당하는 곳을 탐색한다.
+
+                return
+
+    if(color == 0):
+        white = white+1
+    else:
+        blue = blue+1
+
+N = int(input())
+
+blue = 0 #파란색 색종이 개수
+white = 0 #하얀색 색종이 개수
+paper = []
+
+for i in range(0, N):
+    temp = list(map(int, input().split()))
+    paper.append(temp)
+
+divide(0,0,N)
+
+print(white)
+print(blue)

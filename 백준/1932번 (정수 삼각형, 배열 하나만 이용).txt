@@ -1,0 +1,23 @@
+import sys
+
+N = int(sys.stdin.readline())  # 삼각형 한변의 길이
+
+triangle = []
+#삼각형의 값들을 받는 2차원 배열
+#이 triangle을 메모제이션으로 수정하여 값을 구한다.
+
+for i in range(0, N):
+    triangle.append(list(map(int, sys.stdin.readline().split())))
+
+height = 2 #삼각형의 높이 즉, 2차원 배열의 colum이 얼마나 되는지를 받는 변수이다.
+for j in range(1, N):
+    for k in range(0, height):
+        if(k == 0):
+            triangle[j][k] = triangle[j][k]+triangle[j-1][k]
+        elif(k == len(triangle[j])-1):
+            triangle[j][k] = triangle[j][k]+triangle[j-1][k-1]
+        else:
+            triangle[j][k] = max(triangle[j][k]+triangle[j-1][k-1], triangle[j][k]+triangle[j-1][k])
+    height = height+1
+
+print(max(triangle[N-1]))

@@ -1,0 +1,19 @@
+def gcd(a, b):
+    while(b != 0):
+        n = a%b
+        a = b
+        b = n
+    return a
+
+num = int(input()) #원의 개수
+r = list(map(int, input().split())) #각 원의 반지름을 배열로 받는다
+
+rotate = [] #몇 회전인지 담는 배열
+
+first = r[0]
+for i in range(1, len(r)):
+    g = gcd(r[0], r[i])
+    rotate.append(str(r[0]//g)+'/'+str(r[i]//g))
+
+for k in range(0, len(rotate)):
+    print(rotate[k])

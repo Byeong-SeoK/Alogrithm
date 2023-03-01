@@ -1,0 +1,59 @@
+def solution(s):
+    li = list()
+    answer = 0
+    
+    i = 0
+    while(i < len(s)):
+        if(s[i] >= 'a'):
+            if(s[i] == 'z'):
+                li.append(0)
+                i = i + 4
+                
+            elif(s[i] == 'o'):
+                li.append(1)
+                i = i + 3
+                
+            elif(s[i] == 't'):
+                if(s[i+2] == 'o'):
+                    li.append(2)
+                    i = i + 3
+                else:
+                    li.append(3)
+                    i = i + 5
+                    
+            elif(s[i] == 'f'):
+                if(s[i+3] == 'r'):
+                    li.append(4)
+                    i = i + 4
+                else:
+                    li.append(5)
+                    i = i + 4
+                
+            elif(s[i] == 's'):
+                if(s[i+2] == 'x'):
+                    li.append(6)
+                    i = i + 3
+                else:
+                    li.append(7)
+                    i = i + 5
+            
+            elif(s[i] == 'e'):
+                li.append(8)
+                i = i + 5
+                
+            elif(s[i] == 'n'):
+                li.append(9)
+                i = i + 4
+                
+            else:
+                break
+        else:
+            li.append(int(s[i]))
+            i = i + 1
+	
+   #문자열 전부를 접근할 필요가 없으므로 일부만 접근하도록 조건을 나눈다.    
+
+    for j in range(0, len(li)):
+        answer = answer + (li[j]*(10**(len(li) - j - 1)))
+        
+    return answer

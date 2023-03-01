@@ -1,0 +1,40 @@
+string solution(int a, int b) {
+    string answer = "";
+    string date[7] = { "FRI", "SAT", "SUN", "MON", "TUE", "WED", "THU" };
+
+    int month = 1;
+    int num = -1;
+    while (month <= a) {
+        if (month == a) {
+            num = num + b;
+        }
+        else {
+            if (month == 2) {
+                num = num + 29;
+            }
+            else if (month < 8 && month % 2 == 0) {
+                num = num + 30;
+            }
+            else if (month < 8 && month % 2 == 1) {
+                num = num + 31;
+            }
+            else if (month >= 8 && month % 2 == 0) {
+                num = num + 31;
+            }
+            else if (month >= 8 && month % 2 == 1) {
+                num = num + 30;
+            }
+            else {
+                break;
+            }
+        }
+        month++;
+    }
+
+    int n = num % 7;
+
+    answer = date[n];
+    
+
+    return answer;
+}

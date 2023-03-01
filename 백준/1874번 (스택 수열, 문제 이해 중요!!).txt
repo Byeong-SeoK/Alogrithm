@@ -1,0 +1,47 @@
+N = int(input())
+
+find = False #스택 수열이 가능한지 여부를 받는 변수이다.
+stack = [] #입력받은 숫자까지 push되고 또 일부 pop되고 등의 연산을 하는 배열이다.
+result = [] #push, pop 같은 어떤 동작을 해야하는지 받는 결과 배열이다.
+push = 1 #현재 어떤 숫자까지 push되었는지 받는 변수이다.
+"""
+stack에 push되는 시작 숫자는 1이므로 push 변수의 스타트 값도 1이어야 한다.
+push가 1이면 stack에는 1까지 기존에 push가 되었다는 의미이고,
+만약에 push가 5이면 stack에는 5까지 기존에 push가 되었다는 의미가 된다.
+이러한 변수를 두어야하는 이유는 push 순서가 오름차순이기 때문이다.
+이 변수를 통해서 [1,2,3,4] -> [1,2] -> [1,2,5,6]같이 4까지 이미 기존에 push를 한 상황에서
+6이 입력되었을 때 1,2,3,4를 제외한 나머지 5,6만 push가 되게 만들 수 있다.
+
+그리고 배열의 제일 오른쪽 끝의 숫자와 입력받은 숫자가 다르면 절대로 스택 수열을 이룰수 없다.
+그래서 만약에 그 수가 다르면 반복문을 탈출시켜 NO를 출력하도록 만든다.
+[1,2,5,3,4]를 만든다면 먼저 1,2일 때는 별 문제 없이 돌아간다.
+그리고 5가 들어가면 stack은 [3,4,5]가 되고 이때 stack의 오른쪽 끝과 입력받은 수 5가 같으므로
+stack은 [3,4]가 된다. 그다음 입력받은 수가 3인데 stack의 오른쪽 끝은 4가되고 서로 다른 수이므로
+절대로 스택 수열을 만족시킬 수 없게 된다.
+"""
+for i in range(0, N):
+    number = int(input())
+
+    while(push <= number):
+        #push 값부터 number까지 일단은 stack에 집어넣어야한다.
+        #즉, 이미 1,2,3을 push해줬고 number가 6일 때, 4,5,6을 stack에 넣게 만들어야한다.
+
+        stack.append(push)
+        push = push+1 #1은 이제 더 이상 stack에 push되면 안되므로 push의 값을 +1 한다.
+        result.append("+") #일단은 push가 진행되므로 +를 집어넣는다.
+
+    if(stack[-1] == number):
+        #stack의 제일 오른쪽이 number와 같으면 pop을 해주어야한다.
+        find = True
+        stack.pop()
+        result.append("-")
+    else:
+        find = False
+        break
+
+
+if(find):
+    for j in range(0, len(result)):
+        print(result[j])
+else:
+    print("NO")

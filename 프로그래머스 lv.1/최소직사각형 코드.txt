@@ -1,0 +1,25 @@
+def solution(sizes):
+    answer = 0
+    
+    for j in range(0, len(sizes)):
+        if(sizes[j][0] < sizes[j][1]):
+            temp = sizes[j][0]
+            sizes[j][0] = sizes[j][1]
+            sizes[j][1] = temp
+    #가로보다 세로가 더 긴 것을 가로로 보내어서 모든 세로가 가로보다 다 짧게 되도록 한다.
+    #그러고 난 후 가로 중 최대값과 세로 중 최대값을 구하여 곱해서 지갑의 크기를 구한다.
+           
+    r_max = 0 #가로 최대값
+    c_max = 0 #세로 최대값
+    
+    for k in range(0, len(sizes)):
+        if(r_max < sizes[k][0]):
+            r_max = sizes[k][0]
+        
+        if(c_max < sizes[k][1]):
+            c_max = sizes[k][1]
+            
+    answer = r_max * c_max
+        
+        
+    return answer

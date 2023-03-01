@@ -1,0 +1,20 @@
+import sys
+
+N = int(input())
+
+up = [0] * 10001
+
+for i in range(N):
+    input_num = int(sys.stdin.readline())
+    #sys.stdin.readline을 통해서 입력을 받을 때 걸리는 시간을 줄일 수 있다.
+    
+    up[input_num] = up[input_num] + 1
+    #이때 배열의 index값이 입력받은 값에 해당한다.
+    #append는 배열에 입력을 하나 넣을 때마다
+    #메모리 재할당이 일어나 메모리 초과가 발생한다.
+    
+for j in range(0, len(up)):
+    if(up[j] != 0):
+        for k in range(0, up[j]): 
+            #1번 이상 해당 index 값을 반복하여 출력한다.
+            print(j)

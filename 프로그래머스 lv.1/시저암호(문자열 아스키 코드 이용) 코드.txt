@@ -1,0 +1,28 @@
+string solution(string s, int n) {
+    string answer = "";
+    int temp = 1;//단순히 1씩 더해주는 숫자;
+
+    for (int i = 0; i < s.size(); i++) {
+        if (s[i] != ' ') {
+            for (int j = 0; j < n; j++) {
+                if (s[i] != 'z' && s[i] != 'Z') {
+                    s[i] = s[i] + temp;
+                }
+                else {
+                    if (s[i] < 'a') {
+                        s[i] = 'A';
+                    }
+                    else {
+                        s[i] = 'a';
+                    }
+                }
+            }
+        }
+        else {
+            continue;
+        }
+    }
+    answer = s;
+
+    return answer;
+}

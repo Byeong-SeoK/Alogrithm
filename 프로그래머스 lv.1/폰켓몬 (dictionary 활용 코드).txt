@@ -1,0 +1,21 @@
+def solution(nums):
+    answer = 0
+    
+    mon = {} #dictionary를 통해서 종류가 key 마리 수 가 value로 받는다.
+    for i in nums:
+        value = mon.get(i)#i라는 종류가 key값으로 dict안에 존재하는 지 확인
+        
+        if(value == None):
+            mon[i] = 1
+        else:
+            mon[i] = mon[i]+1
+
+    select = len(nums)//2
+    
+    if(select <= len(mon)):#뽑아야하는 숫자 보다 monster 종류가 많을 때
+        answer = select#무조건 뽑아야하는 숫자 만큼만이 종류의 maximum이다
+    
+    else:#뽑아야하는 숫자가 monster 종류보다 많을 때
+        answer = len(mon)#뽑아야하는 숫자가 종류보다 많으므로 총 종류의 갯수가 maximum이다.
+        
+    return answer

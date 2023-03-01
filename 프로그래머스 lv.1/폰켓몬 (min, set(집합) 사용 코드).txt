@@ -1,0 +1,4 @@
+def solution(ls):
+    return min(len(ls)/2, len(set(ls)))
+    #ls와 set(ls) (ls의 중복을 제거한 집합이다 즉 종류들만 남은 집합이 된다.)
+    #그 중에서 더 작은 값이 해당하는 것을 리턴하면 된다. 그래서 min함수를 사용

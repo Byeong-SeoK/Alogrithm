@@ -1,0 +1,36 @@
+point = {}
+N = int(input())
+
+for i in range(0, N):
+    x, y = map(int, input().split())
+    
+    if(x in point):
+        point[x].append(y)
+    else:
+        point[x] = []
+        point[x].append(y)
+        
+for j in point: #사전의 x좌표에 따른 y좌표도 오름차순으로 정렬한다.
+    point[j].sort()
+    
+MIN = min(point) #사전에서 최소 x좌표
+MAX = max(point) #사전에서 최대 x좌표
+
+for p in range(MIN, MAX+1):
+    if(p in point):
+        for q in point[p]:
+            print(p, end= " ")
+            print(q)
+
+
+====== 다른 풀이 ======
+import sys
+n = int(sys.stdin.readline())
+so = []
+for i in range(n):
+    so.append(list(map(int, sys.stdin.readline().split())))
+so.sort(key=lambda x: (x[0], x[1])) 
+#x좌표로 먼저 정렬하고 y좌표로 정렬한다.
+#x[0]이 x좌표를 x[1]이 y좌표를 의미한다.
+for i in so:
+    print(i[0], i[1])

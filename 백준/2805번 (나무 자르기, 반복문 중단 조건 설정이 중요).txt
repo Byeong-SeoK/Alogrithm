@@ -1,0 +1,47 @@
+import sys
+N, M = map(int, sys.stdin.readline().split())
+#N은 나무의 수, M은 집으로 가져가려고 하는 나무의 길이
+
+tree = list(map(int, sys.stdin.readline().split()))
+
+MIN = 1
+#절단기 높이를 1m로 설정할 때, 가장 긴 길이의 나무를 가져갈 수 있다.
+MAX = max(tree)
+#절단기 높이를 가장 높은 나무로 설정할 때 가장 짧은 길이의 나무를 가져갈 수 있다.
+mid = (MAX+MIN)//2
+
+while MIN <= MAX:
+    length = 0 #특정 cm로 절단기 높이를 설정할 때의 가져가는 나무 길이의 합
+    for i in range(0, len(tree)):
+        if(length > M):
+            break
+        else:
+            if(tree[i] > mid):
+                length = length + (tree[i]-mid)
+            else:
+                continue
+
+    if(length < M):
+        #가져가는 나무의 길이 <= 필요량, 높이를 너무 높게 잡은 경우
+        MAX = mid-1
+        mid = (MAX+MIN)//2
+    else:
+        #가져가는 나무의 길이 > 필요량, 높이를 너무 낮게 잡은 경우
+        #가져가는 나무의 길이 == 필요량이더라도 MIN < MAX이면
+        #while문을 더 돌려서 최대한 큰 값을 얻는 조건인 MIN > MAX
+        #일때 멈추고 그때의 MAX를 출력하도록 한다.
+        MIN = mid+1
+        mid = (MAX+MIN)//2
+print(MAX)
+"""
+위의 while문 멈춤조건과 왜 MAX를 print하는지에 대한 이유는
+
+1645번 랜선자르기의 이유에 해당한다. 아래의 설명을 읽어보고 참조하자
+count == N은 없는데 count >= N은 있는 이유
+180으로 11개를 만들었다하더라도 200으로 11개를 만들수 있으면
+200으로 잘라야한다. 왜냐하면 최댓값을 구해야하므로.
+그래서 count == N이더라도 MIN < MAX이면 아직 최대값에 도달하지 않은 것이다.
+MIN == MAX일 때가 가장 최댓값이고 MIN이 MAX보다 커지는 시점이 while문을 탈출 시키는 시점이고
+그때의 MAX값이 가장 최대 길이로 자른 것에 해당한다. MIN을 출력하면 MIN > MAX인 상황이므로
+항상 원하는 출력 값보다 1이 더 큰 값이 출력된다.
+"""

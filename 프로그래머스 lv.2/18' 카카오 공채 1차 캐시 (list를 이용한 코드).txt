@@ -1,0 +1,29 @@
+def solution(cacheSize, cities):
+    answer = 0
+    if(cacheSize == 0):
+        answer = len(cities) * 5
+    else:
+        cache = []
+        
+        for i in range(0, len(cities)):
+            city = cities[i].lower()
+            
+            if(len(cache) < cacheSize and city in cache):
+                #캐시 크기가 cacheSize보다 작지만 해당 값이 캐시에 있을때
+                cache.pop(cache.index(city)) #검색된 값을 지우고 밑에서 새로 추가
+                answer = answer + 1
+            elif(len(cache) < cacheSize):
+                #캐시 크기가 cacheSize보다 작고 해당 값이 캐시에 없을때
+                answer = answer + 5
+            elif(city in cache):
+                #캐시 크기가 cacheSize보다 크고 해당 값이 캐시에 있을때
+                cache.pop(cache.index(city))
+                answer = answer + 1
+            else:
+                #캐시 크기가 cacheSize보다 크고 해당 값이 캐시에 없을때
+                del cache[0] #가장 오래 된 값은 항상 0번째에 존재
+                answer = answer + 5
+            
+            cache.append(city)
+                    
+    return answer

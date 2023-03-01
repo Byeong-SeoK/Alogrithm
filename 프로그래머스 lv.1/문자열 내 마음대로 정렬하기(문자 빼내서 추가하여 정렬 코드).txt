@@ -1,0 +1,23 @@
+vector<string> solution(vector<string> strings, int n) {
+    for (int i = 0; i < strings.size(); i++) {
+        string temp = strings[i];
+        temp = temp[n] + temp;
+        strings[i] = temp;
+    }
+    //strings의 각 string의 n번째 문자를 각 string의 제일 앞에 추가 
+
+    sort(strings.begin(), strings.end());
+    //sort함수는 문자열의 모든 알파벳에 대하여 오름차순으로 정리해준다.
+
+    for (int j = 0; j < strings.size(); j++) {
+        string temp = strings[j];
+        string t = "";
+        for (int k = 1; k < temp.size(); k++) {
+            t = t + temp[k];
+        }
+        strings[j] = t;
+    }
+    //string에서 추가한 문자를 지워주고 원래대로 돌린다.
+
+    return strings;
+}

@@ -1,0 +1,43 @@
+while True:
+    sentence = input()
+    if(sentence == "."):
+        break
+    
+    stack = []
+    find = True 
+    #균형을 잡는지 여부를 받는 변수이다.
+    #스택에는 (, [ 만 들어가도록 로직을 구현했는데
+    #만약에 문장에 ), ] 만 있는 경우 no를 출력하지 못하고 yes가 되버린다.
+    #그러한 예외를 막기 위해 find 변수를 정의한 것이다.
+    for i in sentence:
+        if(i == '(' or i == '['):
+            stack.append(i)
+        elif(i == ')'): 
+            if(len(stack) == 0): #앞에 (가 없는데 )가 들어오면 항상 올바르지 않다.
+                find = False
+                break
+            else:
+                if(stack[-1] == '('):
+                    stack.pop()
+                    find = True
+                else: #앞에는 [가 있는데 뒤에 )가 온 경우 항상 올바르지 않다.
+                    find = False
+                    break
+        elif(i == ']'):
+            if(len(stack) == 0):
+                find = False
+                break
+            else:
+                if(stack[-1] == '['):
+                    stack.pop()
+                    find = True
+                else:
+                    find = False
+                    break
+        else: #문장에 (), []이 아예 없는 경우에는 균형잡힌 문장이다.
+            continue
+    
+    if(len(stack) == 0 and find):
+        print("yes")
+    else:
+        print("no")

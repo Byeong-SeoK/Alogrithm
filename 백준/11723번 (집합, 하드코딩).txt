@@ -1,0 +1,41 @@
+import sys
+N = int(sys.stdin.readline())
+
+S = []
+for i in range(0, N):
+    temp = sys.stdin.readline().split()
+    order = ""
+    num = 0
+
+    if(len(temp) == 1):
+        order = temp[0]
+    else:
+        order = temp[0]
+        num = temp[1]
+
+    if(order == "add"):
+        if(int(num) in S):
+            continue
+        else:
+            S.append(int(num))
+    elif(order == "remove"):
+        if(int(num) in S):
+            S.remove(int(num))
+        else:
+            continue
+    elif(order == "check"):
+        if(int(num) in S):
+            print(1)
+        else:
+            print(0)
+    elif(order == "toggle"):
+        if(int(num) in S):
+            S.remove(int(num))
+        else:
+            S.append(int(num))
+    elif(order == "all"):
+        S = list(range(1, 21))
+    elif(order == "empty"):
+        S.clear()
+    else:
+        continue

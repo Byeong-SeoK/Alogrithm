@@ -1,0 +1,19 @@
+N = int(input())
+paper = [[0 for a in range(0, 101)] for b in range(0, 101)]
+#검은색 종이가 붙은 구간에 대해서는 1 아닌 곳에 대해서는 0
+#이렇게 값을 부여하여 흰 곳과 검은 곳의 차이를 둔다.
+
+for i in range(0, N): #입력 횟수 만큼 반복
+    x, y = map(int, input().split())
+    for j in range(x, x+10):
+        for k in range(y, y+10):
+            paper[j][k] = 1
+            
+#1의 값을 갖고 있는 index의 개수를 다 더해서 넓이를 구한다.
+area = 0
+for p in range(0, len(paper)):
+    for q in range(0, len(paper[p])):
+        if(paper[p][q] == 1):
+            area = area+1
+
+print(area)

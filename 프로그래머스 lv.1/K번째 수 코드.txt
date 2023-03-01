@@ -1,0 +1,36 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> solution(vector<int> array, vector<vector<int>> commands) {
+    vector<int> answer;
+
+    int start, end, num;
+    for (int i = 0; i < commands.size(); i++) {
+        start = commands[i][0];
+        end = commands[i][1];
+        num = commands[i][2];
+
+        string temp = "\0";
+        for (int j = start - 1; j < end; j++) {
+            temp = temp + char(array[j]);
+        }
+
+        for (int k = 0; k < temp.length() - 1; k++) {
+            for (int p = k; p < temp.length(); p++) {
+                if (temp[k] > temp[p]) {
+                    char t = temp[k];
+                    temp[k] = temp[p];
+                    temp[p] = t;
+                }
+                else {
+                    continue;
+                }
+            }
+        }
+        answer.push_back(temp[num - 1]);
+
+    }
+    return answer;
+}

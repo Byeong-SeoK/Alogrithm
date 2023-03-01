@@ -1,0 +1,22 @@
+import sys
+from collections import deque
+
+N = int(sys.stdin.readline())
+buffer = deque()
+
+while True:
+    packet = int(sys.stdin.readline())
+    if (packet == -1):
+        break
+        
+    if (packet != 0 and len(buffer) < N):
+        buffer.append(packet)
+    elif (packet == 0):
+        buffer.popleft()
+    else:
+        continue
+        
+if (len(buffer) != 0):
+    print(*buffer)
+else: 
+    print("empty")
