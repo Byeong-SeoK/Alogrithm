@@ -1,0 +1,64 @@
+def solution(id_list, report, k):
+    answer = [0]*len(id_list)
+    
+    mail = {} #id_list 순서의 userID가 key값이고 mail받는 횟수가 value이다.
+    #위 dictionary없이 answer에 reported횟수를 넣으면 id_list로 받은
+    #userID순서로 mail받은 횟수가 저장되지 않는다. 그러므로 mail이라는 dictionary를 통해
+    #1차적으로 한번 id_list에 맞게 mail 받은 순서를 저장하도록 한다.
+    
+    for o in id_list:
+        mail[o] = 0
+    #print(mail)
+    
+    user_report = {} #userID:신고ID 형태의 dictonary이다.
+    for i in range(0, len(report)):
+        userID, reportID = report[i].split(" ")
+        #report[i]에 접근하여 userID, reportID를 " " 기준으로 쪼갠다.
+        
+        if(userID not in user_report): #사전의 형태에 맞게 값을 저장하도록 한다.
+            user_report[userID] = []
+            user_report[userID].append(reportID)
+        else:
+            user_report[userID].append(reportID)
+        
+        user_report[userID] = list(set(user_report[userID]))
+        #한 명의 유저가 어떤 다른 한 명의 유저를 여러 번 신고할 때
+        #발생하는 중복을 set으로 지우고 list를 적용하여 집합을 다시 배열로 바꾼다.
+        
+    #print(user_report)
+    
+    reported_number = {} #userID:해당 user가 신고 당한 횟수 형태의 dictionary
+    for j in range(0, len(id_list)):
+        reported_number[id_list[j]] = 0
+    
+    for p in user_report: #실제 각 user들이 몇 번 신고 당했는지 count 한다.
+        for q in user_report[p]:
+            reported_number[q] += 1
+    
+    #print(reported_number)
+    
+    for a in reported_number:
+        if(reported_number[a] < k):
+            #특정 유저가 신고당한 횟수가 k라는 임계값보다 작으면
+            #메일을 보낼 필요가 없으므로(부가적인 처리) 넘어간다.
+            continue
+        
+        else:
+            for b in user_report: 
+                #특정 user가 신고한 user들 명단에 k라는 신고 횟수 임계값을
+                #넘은 user를 찾고 존재하면 mail dictionary에
+                #mail 받는 횟수를 +1한다.
+                if(a in user_report[b]):
+                    mail[b] += 1
+                
+    #print(mail)
+    
+    index = 0 #answer의 index순서가 mail의 key 순서와 동일해야한다.
+    for u in mail: #mail의 value값으로 answer의 값을 바꾼다.
+        answer[index] = mail[u]
+        index = index+1
+        
+    #print(answer)
+    
+            
+    return answer
