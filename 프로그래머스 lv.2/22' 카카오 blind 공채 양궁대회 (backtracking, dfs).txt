@@ -1,0 +1,74 @@
+def calcPoint(apeach, ryan): #apeach가 맞힌 화살 배열, ryan이 맞힌 화살 배열
+    apeach_score = 0 #apeach의 점수
+    ryan_score = 0 #ryan의 점수
+
+    for i in range(0, len(apeach)):
+        if(apeach[i] == ryan[i] == 0): #둘다 맞히지 않은 경우
+            continue
+        else:
+            if(apeach[i] >= ryan[i]): #apeach가 점수를 가져가는 경우
+                apeach_score = apeach_score + i
+            else: #ryan이 점수를 가져가는 경우
+                ryan_score = ryan_score + i
+
+    return ryan_score - apeach_score
+    #이 값이 음수가 나오면 ryan이 이기지 못한 경우이다.
+    #이 값이 양수가 나오면 ryan이 이기는 경우이다.
+
+def dfs(index, arrow, apeach, ryan):#각 배열에 접근하는 index, 남은 화살 개수, apeach의 경우, ryan의 경우
+    global answer, point
+    if arrow < 0: #화살을 다 쓴 경우 이전으로 돌아가서 다른 경우를 탐색하도록 한다.
+        return
+
+    #점수 계산
+    if index > 10: #화살 여부와 관계 없이 배열 끝까지 dfs로 한번 탐색한 경우
+        diff = calcPoint(apeach, ryan) #끝까지 탐색했으므로 ryan, apeach 각각의 점수를 구해본다.
+        if diff <= 0: #diff가 음수이므로 apeach가 이긴 경우이므로 다른 경우를 탐색하도록 return 한다.
+            return
+        else:
+            if diff > point: #이전 경우보다 더 큰 점수 차로 ryan이 이긴 경우
+                point = diff #이전 경우를 현재 경우로 업데이트 한다.
+                answer = ryan[:] #answer에 ryan이 화살 맞힌 경우를 집어 넣는다.
+                answer[0] = answer[0]+arrow #화살이 남는 경우 가장 낮은 숫자에 맞히도록 한다.
+        return
+
+    ryan[index] = apeach[index]+1 #ryan의 경우에 apeach가 맞힌 화살 보다 +1 더 많은 화살 값을 넣는다.
+    dfs(index+1, arrow - ryan[index], apeach, ryan) #dfs로 해당 경우보다 더 깊은 경우를 탐색한다.
+    #위의 dfs함수로 arrow가 0이 될 때까지 탐색하게 된다.
+
+    ryan[index] = 0 #위의 경우에서 ryan이 이긴 경우를 찾지 못했으므로 바로 이전 경우를 초기화 한다.
+    dfs(index+1, arrow, apeach, ryan)
+    #위 dfs함수는 arrow = 0 일 때 걸린다. 그러므로 더 깊게 탐색하더라도 ryan 배열에 변화가 생기지 않고
+    #오히려 이전 경우로 돌아가도록 return 하게 만들어준다. (arrow < 0)에서 계속 걸린다.
+
+
+def solution(n, info):
+    global answer
+    answer = [-1]
+    """
+    k점에 많이 맞힌 사람이 k점 가져감
+    k점에 어피치 == 라이언인 경우 어피치가 k점 가져감
+    최종 점수 어피치 == 라이언인 경우 어피치 우승
+    "가장 점수 차이가 많이 나는 우승 방법을 찾아야한다."
+    info는 각 index(10-i점수를 의미)에 화살이 맞은 개수를 가진 배열
+    라이언이 3점차로 이긴 상황에서 [...,0,3,0]이 [....,3,0,0,0]보다
+    더 높은 우선순위를 가져 [...,0,3,0]이 선택된다.
+    어피치 점수 > 라이언 점수 이면 [-1]을 return
+    """
+
+    info = info[::-1] #낮은 점수를 최대한 많이 맞혀야하므로 배열을 낮은 점수순으로 정렬
+    #print("apeach: ", info)
+
+    case = [0]*11 #ryan이 이기는 경우를 받는 배열
+
+    global point
+    point = 0 #우승할 수 있는 여러가지 방법 중에서 가장 큰 점수 차를 찾기 위해 이전 결과 값을 받는 변수
+    dfs(0, n, info, case)
+
+    answer = answer[::-1]
+
+    return answer
+
+
+print(solution(5, [2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0]))
+#[0, 2, 2, 0, 1, 0, 0, 0, 0, 0, 0]
