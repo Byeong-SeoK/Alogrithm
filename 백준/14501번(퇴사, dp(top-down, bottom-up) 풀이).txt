@@ -1,0 +1,64 @@
+N = int(input())
+
+appointment = [] #백준이가 잡아놓은 예약 배열 [걸리는 시간, 얻는 금액] 구조이다.
+for i in range(0, N):
+    temp = list(map(int, input().split()))
+    appointment.append(temp)
+
+
+#Bottom-up 방식
+
+#아래에서부터 위로 올라가는 방식이므로 0일부터 N일까지로 정방향으로 올라가는 방법이다.
+#일일히 하나씩 접근하여 상담 못하는 기간만큼 건너뛰고 그 뒤로 다시 하나씩 접근하는 방법이므로
+#dp + greedy 방법이라고 볼 수 있다. 그래서 시간복잡도가 O(N^2)가 된다.
+#즉, day1에 해당하는 날짜의 상담을 받고 appointment[day1][0] 기간 이후의 상담 날짜에 접근하여
+#해당 날짜(day2)에 대해 메모제이션에 저장된 즉, 최대값과 day1때의 상담을 받았을 때의 값을 비교하여
+#더 큰 값이 day2의 메모제이션 값에 저장되도록 한다.
+
+#처음에는 비용이 0인 상태로 진행하므로 +1의 크기의 배열을 만들고 어떠한 상담도 안한 상태의 값을 넣도록 한다.
+memory = [0]*(N+1)
+
+for day1 in range(0, N):
+    for day2 in range(day1+appointment[day1][0], N+1):
+        #day1값에 해당하는 날짜에 상담을 하면 appoint[day1][0] 기간 동안 상담을 하지 못하므로
+        #이 기간을 건너뛰어야 한다. 그래서 day1+appointment[day1][0]에 해당하는 날짜로 바로 for문으로 접근한다.
+
+        if(memory[day2] < memory[day1] + appointment[day1][1]):
+            memory[day2] = memory[day1] + appointment[day1][1]
+            #이렇게 해두면 memory[day1+appointment[day1][0]]부터 값이 메모제이션 배열에 저장되는데
+            #처음에는 memory의 모든 값이 0이므로 단순히 다 저장된다.
+            #하지만, 만약에 day2가 day1+appointment[day1][0] 값과 같아지는 때 부터는
+            #메모제이션 값(memory[day2]) 즉, 상담을 하지 않고 넘어갈 때의 값과
+            #상담을 했을 때 값(memory[day1]+appointment[day1][1])과 비교하여 메모제이션 값을 최신화한다.
+            #이 과정을 거쳐 결국 메모제이션 배열의 가장 마지막 즉, index가 -1인 곳에 최대값이 저장된다.
+
+print(memory[-1])
+
+
+#Top-down 방식
+
+#N일부터 거꾸로 접근하여 최대값을 구하는 방법이다.
+#이렇게 푸는 것이 가능한 이유는 N일을 기준으로 더 이상 상담을 하지 않기 때문이다.
+#그러므로 N일 시점이 도착지점에 해당하므로 도착 지점을 기준으로 역으로 올라간다.
+
+# 처음에는 비용이 0인 상태로 진행하므로 +1의 크기의 배열을 만들고 어떠한 상담도 안한 상태의 값을 넣도록 한다.
+dp = [0]*(N+1)
+for day in range(N-1, -1, -1):
+    if(appointment[day][0]+day > N): #남은 일수 대비 상담에 필요한 일수가 많은 경우 상담하지 않는다.
+        dp[day] = dp[day+1]
+        #상담을 하지 않았으므로 이후의 비용과 이전의 얻은 비용 값이 같아진다.
+        #즉, 역으로 생각해보면 이전에 얻은 비용에서 이후 상담을 통한 비용이 추가되지 않았다는 뜻과 같으므로
+        #이전의 비용과 이후의 비용이 같아지는 것이다.
+    else:
+        dp[day] = max(dp[day+1], dp[day+appointment[day][0]]+appointment[day][1])
+        #max함수 파라미터에 대한 설명
+        #dp[day+1]은 day에 해당하는 날짜의 상담을 진행하지 않아서 이전의 값과 동일하다는 것을 의미한다.
+        #dp[day+appointment[day][0]]+appointment[day][1]의 의미는
+        #day에 해당하는 날짜의 상담을 진행했으므로 이후의 메모제이션 값(day+1, day+2...) 중에서
+        #day+appoint[day][0]에 해당하는 날짜를 dp배열의 index로 접근하여 해당 메모제이션 값과
+        #day날짜에 상담을 하는 것으로 얻은 비용의 값을 더한 것에 해당한다.
+        #day+appoint[day][0]에 해당하는 값을 dp배열의 index로 이용하여 접근하는 이유는
+        #day에 해당하는 날짜에 상담을 하면 appointment[day][0]동안 상담을 하지 못하기 때문이다.
+        #그러므로 그 기간 동안의 값을 사용할 필요가 없으므로 건너뛰는 것이다.
+
+print(dp[0])

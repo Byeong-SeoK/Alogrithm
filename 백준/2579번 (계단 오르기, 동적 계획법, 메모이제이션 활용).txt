@@ -18,7 +18,7 @@ else:
     score[1] = max(stair[0] + stair[1], stair[1])  # 두번째는 첫번째를 밟고 온 경우, 한번에 온 경우 2가지이다.
     score[2] = max(stair[0] + stair[2], stair[1] + stair[2])
     # 세번째 경우에는 연속 3계단은 밟지 못한는 규칙을 적용해야하므로 첫번째 계단을 밟고 바로 온 경우
-    # 첫번째는 건너뛰고 두번째 세번째를 차례롤 밟고 온 경우 이렇게 2가지이다.
+    # 첫번째는 건너뛰고 두번째 세번째를 차례를 밟고 온 경우 이렇게 2가지이다.
 
     for j in range(3, N):
         score[j] = max(score[j - 2] + stair[j], score[j - 3] + stair[j] + stair[j - 1])

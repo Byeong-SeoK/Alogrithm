@@ -1,0 +1,20 @@
+test = int(input()) #고사장 개수
+student = list(map(int, input().split())) #시험 보는 학생 수
+supervisor,vice_supervisor = map(int, input().split()) #총감독관, 부감독관 각각이 감시할 수 있는 학생 수
+
+number = 0 #필요한 총 감독관(총감독관+부감독관) 인원수
+for i in range(0, len(student)):
+    student[i] = student[i] - supervisor #모든 고사장에는 총감독관이 1명 있어야하므로 총감독관이 감시할 수 있는 학생 수를 뺀다.
+    number = number + 1 #총 감독관 수를 더한다.
+
+    if(student[i] > 0):#고사장에 학생수가 4명인데 총감독관이 감시할 수 있는 학생이 6명인 상황이면 아래 과정을 할 필요가 없다.
+        quotient = student[i] // vice_supervisor  # 필요한 부감독관 수를 1차적으로 구한다.
+        remain = student[i] % vice_supervisor  # 부감독관이 감시할 수 있는 학생 수로 나누었을 때 나머지가 생기는 경우 부감독관을 한 명 더 추가한다.
+
+        if (remain != 0):
+            quotient = quotient + 1
+
+        number = number + quotient
+
+
+print(number)
