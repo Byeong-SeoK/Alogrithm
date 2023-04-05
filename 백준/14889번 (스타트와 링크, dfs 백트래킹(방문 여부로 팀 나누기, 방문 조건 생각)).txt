@@ -1,0 +1,59 @@
+def dfs(depth, index):
+    #depth는 얼마나 깊게 탐색들어갔는지 받는 변수이다.
+    #index는 현재 combination 배열에서 어디에 접근하고 있는지 받는 배열이다.
+
+    global difference
+
+    if(depth == N//2): #한계까지 탐색이 된 경우
+        A, B = 0, 0 #A팀, B팀의 전력 값을 받는 변수
+
+        for i in range(0, N):
+            for j in range(0, N):
+                # (0,1), (0,2), (0,3), ....(3,2), (3,4) 이런 형태로 계속 방문할 수 있도록 이중 for문을 사용한다.
+                
+                if(visited[i] and visited[j]):
+                    #i번째 사람과 j번째 사람이 같은 팀인 경우 (방문O)
+                    A = A + combination[i][j]
+
+                elif(not visited[i] and not visited[j]):
+                    #i번째 사람과 j번째 사람이 같은 팀인 경우(방문X)
+                    B = B + combination[i][j]
+
+        if(difference > abs(A-B)): #이전 차이보다 현재 전력 차이가 더 작은 경우 업데이트
+            difference = abs(A-B)
+
+    else:
+        for i in range(index, N):
+            #index번째의 사람부터 N번째의 사람 순으로 탐색하는 이유
+            #이전 index는 이미 탐색이 완료되었기 때문에 그 이후 index에 대해서만 탐색하면 되기 때문이다.
+            #즉, 이전의 index에서 가장 최적의 값을 구하게 되므로 다시 접근할 이유가 없다.
+
+            if not visited[i]:
+                visited[i] = True #처음 N//2까지 탐색할 때 까지는 방문을 하게 되므로 true가 된다.
+                dfs(depth + 1, i + 1)
+                #i번째는 자기자신이므로 탐색할 필요가 없다.
+                #그리고 이 dfs 탐색은 N//2 깊이까지만 탐색하게 된다.
+                #이렇게 탐색을 하게 되면 결국 N//2개수에 해당하는 노드만 방문하게 된다.
+                #그러므로 이 방문한 것들에 대하 한 팀이 구성되고 방문하지 않은 것들에 대해 한 팀이 구성된다.
+                #그래서 위에서 전력 차를 계산할 때 True와 False(not visited)를 기반으로 각각의 팀의 전력을 구하게 되는 것이다.
+
+                visited[i] = False #더 깊게 내려간 dfs에서 탈출했으므로 해당 방문 여부를 다시 false가 된다.
+
+
+N = int(input()) #축구를 하는 총 인원 수
+
+global difference
+difference = 1e9 #A팀과 B팀의 전력 차이를 받는 변수, 0이면 항상 가장 차이가 적게 되므로 임의의 엄청 큰 값으로 세팅한다.
+visited = [False]*N #특정 인원을 팀으로 포함했는지 즉, 방문 여부를 받는 변수이다.
+#이때 총 인원수는 N명이므로 길이가 N인 1차원 배열로 visited 배열을 만들면 된다.
+#굳이 NxN 2차원 배열을 할 필요가 없다. 중복이 되기 때문이다.
+#그리고 방문 여부로 팀을 쪼개어 방문O 한 팀, 방문X 한 팀 이렇게 분리한다.
+
+combination = [] #인원간 같은 팀일 때 발생하는 버프 효과를 담은 배열
+for _ in range(0, N):
+    temp = list(map(int, input().split()))
+    combination.append(temp)
+
+dfs(0,0)
+
+print(difference)
