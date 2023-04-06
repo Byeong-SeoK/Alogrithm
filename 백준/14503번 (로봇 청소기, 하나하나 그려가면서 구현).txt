@@ -1,0 +1,84 @@
+N, M = map(int, input().split())
+#N은 방의 가로 길이 M은 방의 세로 길이를 의미한다.
+
+i, j, direction = map(int, input().split())
+#(i,j)는 로봇 청소기의 현재 위치이고 direction은 로봇 청소기 현재 바라보고 있는 방향이다.
+
+room = [] #방의 크기와 상태를 받는 배열이다.
+for p in range(0, N):
+    temp = list(map(int, input().split()))
+    room.append(temp)
+    #이때 1인 값은 벽을 0인 값은 청소가 되지 않은 바닥을 의미한다.
+
+count = 0 #로봇 청소기가 청소한 칸 수를 세는 변수
+while True:
+    if(room[i][j] == 0):
+        count = count+1
+        room[i][j] = -1
+        #-1로 청소했음을 표현한다.
+        #왜냐하면 N:0, E:1, S:2, W:3으로 0부터 3까지는 지정되어있으므로 사용하면 헷갈린다.
+
+    if(room[i-1][j] != 0 and room[i][j-1] != 0 and
+            room[i][j+1] != 0 and room[i+1][j] != 0):
+        #현재 로봇이 있는 위치를 기준으로 동서남북 4방향 모두 청소되어있는 상황이거나
+        #주변이 싹다 벽인 상황이어서 더 이상 청소할 수 없을 때이다.
+        #해당 인덱스의 값이 0이 아닌지인걸로 위 두 상황 모두 판별하도록 한다.
+
+
+        #로봇 청소기의 뒷쪽이라는 것은 어느 방향을 바라보고 있냐에 따라 유동적이다.
+        #로봇 청소기가 바라보고 있는 방향을 기준으로 어디로 가야 뒤로 가는 것인지 잘 생각해야한다.
+        if (direction == 0):  # 북쪽을 바라보고 있는 상황이다.
+            if (room[i+1][j] == 1): #뒷쪽이 벽인 상황
+                break
+            else:
+                i = i+1
+
+        elif (direction == 1):  # 동쪽을 바라보고 있는 상황이다.
+            if (room[i][j-1] == 1):
+                break
+            else:
+                j = j - 1
+
+        elif (direction == 2):  # 남쪽을 바라보고 있는 상황이다.
+            if (room[i-1][j] == 1):
+                break
+            else:
+                i = i-1
+
+        elif (direction == 3):  # 서쪽을 바라보고 있는 상황이다.
+            if (room[i][j+1] == 1):
+                break
+            else:
+                j = j+1
+
+    else:
+        #로봇을 기준으로 동서남북 4방향 중 한 군데라도 청소가 안 된 곳이 존재하는 상황이다.
+        #이때는 먼저 반시계 방향으로 90º를 돌려야한다.
+
+        for _ in range(0, 4):
+            if (direction == 0): #북쪽을 바라보고 있는 상황이다.
+                direction = 3 #이때는 서쪽으로 방향을 돌려야하므로 direction을 3으로 만든다.
+            else: #북쪽 말고 다른 방향을 바라보고 있는 상황이다.
+                direction = direction - 1 #이때는 -1을 하는 것으로 방향을 전환할 수 있다.
+
+            if(direction == 0): #북쪽을 바라보고 있는 상황이다.
+                if(room[i-1][j] == 0):
+                    i = i-1 #북쪽을 바라볼 때는 i-1로 전진할 수 있다.
+                    break
+
+            elif(direction == 1): #동쪽을 바라보고 있는 상황이다.
+                if(room[i][j+1] == 0):
+                    j = j+1 #동쪽을 바라볼 때는 j+1로 전진할 수 있다.
+                    break
+
+            elif(direction == 2): #남쪽을 바라보고 있는 상황이다.
+                if(room[i+1][j] == 0):
+                    i = i+1 #남쪽을 바라볼 때는 i+1로 전진할 수 있다.
+                    break
+
+            elif(direction == 3): #서쪽을 바라보고 있는 상황이다.
+                if(room[i][j-1] == 0):
+                    j = j-1 #서쪽을 바라보고 있을 때는 j-1로 전진할 수 있다.
+                    break
+
+print(count)
