@@ -1,0 +1,82 @@
+def rotate():
+    global convey_belt_durability, robots
+
+    durability = convey_belt_durability.pop()
+    convey_belt_durability = [durability] + convey_belt_durability
+    #insert보다 배열 2개 합치는 것이 시간복잡도에 있어서 더 빠르다.
+
+    robots.pop() #로봇이 올려져있든 아니든 내리는 동작은 변함이 없다.
+    robots = [0] + robots
+    #다만, 로봇을 내렸든 아무것도 없었든 항상 0이 앞에 붙는 것은 변함이 없다.
+
+    robots[-1] = 0
+    #rotate에 의해 로봇이 컨베이어 벨트의 가장 마지막 칸에 존재하게 되는 경우가 있다.
+    #로봇이 컨베이어 벨트의 가장 마지막에 도착하는 순간 바로 내려지므로
+    #컨베이어 벨트 마지막 칸은 항상 로봇이 없는 상태가 된다.
+    #그러므로 rotae함수 마지막에 robots[-1]을 넣어서 항상 로봇이 없는 상태가 되도록
+    #즉, 로봇이 도착 즉시 내려가는 형태로 만들어주어야 한다.
+
+    return
+
+def move_robot():
+    global convey_belt_durability, robots
+
+    for i in range(len(robots)-1, 0, -1):
+        #가장 먼저 올라간 로봇 부터 이동하므로 robots 배열을 역순으로 접근한다.
+        #다만 이때 robots[i] 위치에 로봇이 있고 이를 robots[i+1]로 옮기는 것이 아니라
+        #robots[i]가 비어있는 상황에서 robots[i-1]에 로봇이 있으면 이를 옮긴다.
+        #그러므로 0번째까지 역순으로 접근하는 것이 아니라 1번째까지 접근해야한다.
+        #0번째가 비어있다고 해서 -1번째의 로봇을 옮길 수 있는 것이 아니기 때문이다.
+
+        if(robots[i] == 0 and convey_belt_durability[i] >= 1 and robots[i-1] != 0):
+            #robots[i] == 0이라는 것은 robots[i]에 로봇이 올려져있지 않다는 뜻이고
+            #convey_belt_durability[i] >= 1이라는 것은 해당 위치의 내구도가 1이상이라는 뜻이고
+            #robots[i-1] != 0 이라는 것은 robots[i-1]에 로봇이 존재한다는 뜻이다.
+
+            robots[i-1] = robots[i-1]-1
+            robots[i] = robots[i]+1
+            convey_belt_durability[i] = convey_belt_durability[i]-1
+
+    return
+
+
+def add_robot():
+    global convey_belt_durability, robots
+
+    if(convey_belt_durability[0] != 0): #올리는 위치의 칸의 내구도가 0보다 큰 경우
+        robots[0] = robots[0]+1 #로봇을 하나 올린다.
+        convey_belt_durability[0] = convey_belt_durability[0]-1
+        #로봇을 올리자마자 내구도가 1 낮아지는 조건을 만족시킨다.
+
+    return
+
+def check():
+    global convey_belt_durability, K
+
+    count = 0 #컨베이어 벨트의 내구도가 0인 것들을 세는 변수
+    for i in range(0, len(convey_belt_durability)):
+        if(convey_belt_durability[i] == 0):
+            count = count+1
+
+    if(count >= K): #내구도가 0인 칸의 개수가 한계값 이상인 경우
+        return True
+
+
+N, K = map(int, input().split())
+#N은 컨베이어 벨트의 길이, K는 내구도가 0인 칸 개수의 threshold 값
+
+convey_belt_durability = list(map(int, input().split())) #컨베이어 벨트의 각 칸의 내구도 값이다.
+robots = [0]*N #컨베이어 벨트에서 로봇의 위치를 받는 배열이다.
+
+
+step = 0 #단계의 값을 받는 변수
+while True:
+    step = step+1 #단계를 하나 늘린다.
+
+    rotate() #컨베이어 벨트를 회전시킨다.
+    move_robot() #로봇을 한칸 이동시킨다.
+    add_robot() #올리는 위치에 로봇을 올린다.
+
+    if(check()): #내구도가 낮은 것의 개수가 threshold값보다 큰 경우 종료시킨다.
+        print(step)
+        break
