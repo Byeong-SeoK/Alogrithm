@@ -1,0 +1,64 @@
+def bfs():
+    global queue, distance, visited
+
+    while queue:
+        node = queue.pop(0) #bfs에서는 큐에서 하나를 빼고 그 노드와 연결된 애들을 너비 탐색한다.
+        depth = distance[node]+1
+        #이때 빠진 노드의 다음 노드들의 깊이는 이전 노드의 깊이+1 값을 가지므로
+        #distance 배열의 node번째의 깊이에 +1을 하여 깊이 값을 갖도록 한다.
+        #이를 통해 queue에서 빼는 것과 무관하게 각 노드의 깊이를 정확하게 알 수 있다.
+        #즉, 같은 level에 존재하는 node들은 같은 depth 값을 갖게 된다.
+
+        for i in friends[node]:
+            if(not visited[i]):
+                queue.append(i)
+                visited[i] = True
+                distance[i] = depth
+
+
+
+N, M = map(int, input().split()) #N은 총 유저의 수, M은 총 간선의 수이다.
+
+friends = {} #방향성이 없는 그래프 형태이므로 사전 형태로 저장해야 왔다갔다 접근이 가능하다.
+for i in range(0, M):
+    A, B = map(int, input().split())
+
+    if(A in friends):
+        friends[A].append(B)
+    else:
+        friends[A] = []
+        friends[A].append(B)
+
+    if(B in friends):
+        friends[B].append(A)
+    else:
+        friends[B] = []
+        friends[B].append(A)
+
+#print(friends)
+
+queue = [] #bfs를 하기 위한 큐
+KBN = [1e6]*(N+1) #총 케빈 베이커 값을 저장하는 배열
+
+for i in friends:
+    distance = [0] * (N + 1)  # 특정 사람으로 각 사람들까지의 거리 값을 받는 변수
+    visited = [False] * (N + 1)  # 해당 사람에 방문하였는지 받는 배열
+
+    visited[i] = True
+    queue.append(i)
+    distance[i] = 0
+    bfs()
+    visited[i] = False
+
+    KBN[i] = sum(distance)
+
+#print(KBN)
+
+temp = 1e12
+answer = 0
+for j in range(0, len(KBN)):
+    if(temp > KBN[j]):
+        temp = KBN[j]
+        answer = j
+
+print(answer)
