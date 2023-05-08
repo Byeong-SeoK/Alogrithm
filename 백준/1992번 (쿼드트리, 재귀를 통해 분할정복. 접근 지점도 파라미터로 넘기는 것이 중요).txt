@@ -1,0 +1,61 @@
+def divide(x,y,N):
+    current_pos = video[x][y]
+    #처음 접근하는 지점의 값을 받는다.
+
+    for i in range(x, x+N):
+        for j in range(y, y+N):
+            if(current_pos != video[i][j]):
+                #하나씩 접근하다가 첫 지점과의 값이 다른 경우
+                #더 이상 접근할 필요가 없다. 왜냐하면 같은 값들끼리 묶어야하기 때문이다.
+                #그러므로 current_pos값을 -1로 놓고 더 이상 접근하지 않도록 break를 건다.
+
+                current_pos = -1
+                break
+
+        if(current_pos == -1): #current_pos가 -1이면 더 이상 접근할 필요가 없다.
+            break
+
+
+    if(current_pos == -1):
+        #current_pos가 -1이면 구역을 나눠야하는 것을 의미하므로 
+        #divide함수를 재귀적으로 호출하여 나눌 수 있도록 한다.
+        print("(", end="")
+        N = N // 2 
+        #이때 나누는 것은 절반으로 쪼갠다.
+        #근데 다만 쪼개다 보면 결국 하나의 구역 내에 4개의 소규모 구역이 생기는 것을 알 수 있다.
+        #즉, 1사분면, 2사분면, 3사분면, 4사분면 형태의 소규모 구역이 생긴다.
+        #각각의 시작점은 x,y / x, y+N / x+N, y / x+N, y+N에 해당한다.
+        #이는 직접 그림으로 그려보면 한번에 이해할 수 있다.
+        #그리고 이렇게 쪼개진 4개의 구역에 대해 각각 접근해서 탐색을 하도록 divide 함수를 호출한다.
+        
+        divide(x, y, N) 
+        divide(x, y + N, N)
+        divide(x + N, y, N)
+        divide(x + N, y + N, N)
+        print(")", end="")
+
+    elif(current_pos == 1):
+        #current_pos가 1이라는 것은 해당 구역 내의 모든 값이 1로 같다는 것을 의미한다.
+        #그러므로 이는 규칙에 의해 1로 통일할 수 있다.
+        
+        print(1, end="")
+
+    else:
+        #current_pos가 0이라는 것은 해당 구역 내의 모든 값이 0으로 같다는 것을 의미한다.
+        #그러므로 이는 규칙에 의해 0로 통일할 수 있다.
+        print(0, end="")
+
+    return
+
+
+size = int(input())
+
+video = [] #전체 구역을 받는 배열이다.
+for i in range(0, size):
+    frames = list(map(int, input()))
+    video.append(frames)
+
+#print(video)
+
+divide(0,0,size)
+#접근 지점이 쪼갤때 마다 그 값이 매번 달라지므로 접근지점에 대한 값도 함수의 파라미터로 주어야한다.
