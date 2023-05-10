@@ -1,0 +1,51 @@
+from collections import deque
+
+def bfs():
+    #x,y는 접근 지점의 좌표를 count는 도착 지점까지 가는데 최소한의 칸 수를 받는 파라미터이다.
+
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+    #dx dy는 접근 방향의 동서남북을 의미한다.
+    #왜냐하면 미로를 빠져나가는 데에 있어서 동서남북 모두 bfs로 탐색해서
+    #가장 빨리 나갈 수 있는 루트를 탐색해야하기 때문이다.
+
+
+    while queue:
+        node = queue.popleft() #deque는 2차원 배열이므로
+        x = node[0] #deque는 2차원 배열이므로
+        y = node[1]
+        visited[x][y] = True
+
+
+        if(x == N-1 and y == M-1):
+            print(maze[x][y])
+            break
+
+        for i in range(0, 4):
+            nx = x+dx[i]
+            ny = y+dy[i]
+
+            if(0 <= nx < N and 0 <= ny < M and not visited[nx][ny]):
+                #이미 방문했던 장소이거나 범위를 넘어가는 곳은 탐색하지 않는다.
+                if(maze[nx][ny] == 1):
+                    queue.append([nx, ny])
+                    maze[nx][ny] = maze[x][y]+1
+
+
+N, M = map(int, input().split())
+#N, M은 미로의 도착지점의 row와 col을 의미한다.
+
+maze = [] #미로를 받는 배열
+for _ in range(0, N):
+    temp = list(map(int, input()))
+    maze.append(temp)
+
+queue = deque([[0,0]])
+visited = [[False]*M for _ in range(0, N)] #방문 여부를 받는 배열
+
+#이때 몇 칸을 가야하는지 받는 배열을 하나 더 만들어서 다루면
+#그 배열을 다루는 시간도 필요하게 되므로 시간 초과가 발생한다.
+#그러므로 maze에서 다음 칸으로 이동하게 되면 그 값을 +1을 하여 값을 바꿔
+#마지막 도착지점에는 이전에 몇개의 칸을 지나왔는지 저장하도록 한다.
+
+bfs()

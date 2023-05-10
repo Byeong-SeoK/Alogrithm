@@ -1,0 +1,59 @@
+from collections import deque
+
+def bfs():
+    count = 1 #항상 접근 지점의 건물은 counting된 상태이다.
+
+    while queue:
+        node = queue.popleft()
+        x = node[0]
+        y = node[1]
+
+        dx = [0, 0, 1, -1]
+        dy = [1, -1, 0, 0]
+        #동서남북으로 접근
+
+        for i in range(0, 4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+            if(0 <= nx < N and 0 <= ny < N):
+                if(MAP[nx][ny] == 1  and not visited[nx][ny]):
+                    queue.append([nx, ny])
+                    visited[nx][ny] = True
+                    count = count+1
+
+    apartment.append(count)
+    #위에서 bfs 탐색을 끝냈을 때의 count에 저장된 값에 아파트 개수가 들어있다.
+
+
+N = int(input()) #지도의 크기
+
+MAP = []
+for k in range(0, N):
+    temp = list(map(int, input())) #string으로 된 입력을 int형 배열로 바꾼다.
+    MAP.append(temp)
+
+visited = [[False]*N for _ in range(0, N)] #방문 여부를 받는 배열
+apartment = []
+queue = deque()
+
+for i in range(0, N):
+    for j in range(0, N):
+        if(MAP[i][j] == 1 and not visited[i][j]):
+            #2중 for문으로 하나씩 접근하면서 건물이 있는 곳 중에서 
+            #방문하지 않은 곳만 queue에 담고 bfs탐색 하도록 한다.
+            #bfs 탐색을 하여 방문한 곳은 not visitied[i][j]에 의해 방문하지 않게 되고
+            #결국 각 단지 마다의 아파트들을 방문하여 단지 구분을 할 수 있다.
+            #즉, 단지의 시작점만 여기서 방문하고 bfs탐색을 통해서 단지 내의 모든 아파트를 탐색한다.
+            #그리고 bfs 탐색을 마친후 다시 여기 와서 탐색할 때는 bfs탐색을 통해 방문한 아파트는
+            #다시 방문하지 않게된다. 그래서 단지 마다 하나의 시작점만 방문하게 된다.
+            
+            queue.append([i, j])
+            visited[i][j] = True
+            bfs()
+
+apartment.sort() #오름차순으로 정렬
+
+print(len(apartment))
+for p in range(0, len(apartment)):
+    print(apartment[p])

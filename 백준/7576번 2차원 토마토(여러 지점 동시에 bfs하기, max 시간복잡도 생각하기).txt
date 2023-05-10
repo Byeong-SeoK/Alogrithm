@@ -1,0 +1,64 @@
+from collections import deque
+import sys
+
+def bfs():
+
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+
+    while queue:
+        tomato = queue.popleft()
+        x = tomato[0]
+        y = tomato[1]
+
+        for i in range(0, 4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+            if(0 <= nx < rows and 0 <= ny < cols and box[nx][ny] == 0):
+                #0인 지점에 대해서만 탐색을 하면 된다.
+                queue.append([nx, ny])
+                box[nx][ny] = box[x][y]+1
+                #다른 배열에 따로 날짜 값을 저장하도록 하면 시간복잡도가 더 커지므로
+                #기존에 주어진 box배열 안에서 값을 바꾸는 것으로 해결한다.
+
+
+cols, rows = map(int, sys.stdin.readline().split())
+
+box = []
+for _ in range(0, rows):
+    temp = list(map(int, sys.stdin.readline().split()))
+    box.append(temp)
+
+
+queue = deque()
+
+for i in range(0, rows):
+    for j in range(0, cols):
+        if(box[i][j] == 1):
+            #모든 1인 지점이 동시에 익어야 하므로 queue에 1인 지점을 다 넣는다.
+            #그래서 bfs탐색을 할 때는 1인 지점이 가장 먼저 큐에서 빠져나가므로
+            #1인 지점 근처에 있는 다른 모든 것들이 한번에 탐색되게 된다.
+            queue.append([i, j])
+
+bfs()
+#한번에 탐색하기 위해서 다른 bfs 문제들 처럼 1인 지점을 만났을 때 bfs를 돌리는 것이 아니라
+#모든 1인 지점에 대해 한번에 bfs 탐색을 하기 위해서 1인 지점을 큐에 다 넣고
+#그리고 이렇게 밖에서 bfs함수를 호출하도록 한다.
+
+compare = 0
+#변수에 직접 담아서 비교하는 이유
+#배열에 대해 가장 큰 값을 구하는 max함수는 시간복잡도가 O(N)이다.
+#그러므로 2중 for문 안에서 2차원 배열에 대해 2번 max를 적용하게 되면
+#총 시간복잡도가 O(N^4)가 되므로 너무 느려진다. 그래서 변수를 사용하는 것이다.
+
+for p in range(0, rows):
+    for q in range(0, cols):
+        if(box[p][q] == 0):
+            print(-1)
+            sys.exit()
+        else:
+            if(compare < box[p][q]):
+                compare = box[p][q]
+
+print(compare-1) #첫번째 1인 지점은 0일차때 익은 것이므로 -1을 빼야 총 날짜가 나온다.
