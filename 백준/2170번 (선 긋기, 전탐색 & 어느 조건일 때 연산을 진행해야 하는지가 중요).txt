@@ -1,0 +1,42 @@
+import sys
+N = int(sys.stdin.readline())
+
+point = set() #선의 시작점과 끝점을 받는 집합, 중복으로 입력이 들어올 수 있기 때문이다.
+for _ in range(0, N):
+    start, end = map(int, sys.stdin.readline().split())
+    point.add((start, end))
+    #집합은 배열을 원소로 add할 수 없다. 배열은 hashable하지 않기 때문. 그래서 tuple을 추가한다.
+
+point = list(point) #집합을 다시 배열로 바꿔준다.
+
+point.sort() #혹시나 뒤죽박죽으로 입력이 들어오면 이후 탐색 및 연산에서 귀찮으므로 오름차순으로 정렬한다.
+
+left = point[0][0] #첫번째 시작점
+right = point[0][1] #첫번째 도착점
+distance = 0 #전체 줄 길이
+
+#print(point)
+
+for i in range(1, len(point)):
+    n_left = point[i][0] #다음번째 시작점, 항상 이전 시작점보다 값이 크다. 시작점을 기준으로  배열을 정렬했기 때문이다.
+    n_right = point[i][1]
+
+    if(n_left > right):
+        distance = distance + right - left
+        #이전까지의 거리를 계산하여 추가한다.
+        #이렇게 이전까지의 거리를 계산하는 이유는 
+        #예륻들어 testcase가 (-19, -15) (1, 3)이라 하면 -19, -15간의 거리를 넣고 1,3을 기준으로
+        #새롭게 뒤에 나오는 점들에 대해 탐색 및 연산을 해야한다.
+        #이러한 연산이 가능한 이유는 위에서 point 배열에 대해 오름차순으로 sorting을 했기 때문에
+        #향후 나오는 입력 값의 시작점들에 대해서 절대 앞에 나온 시작점보다 작은 값이 나올 수 없기 때문이다.
+        #그래서 앞까지의 결과를 저장하고 새로이 탐색 및 연산을 하는 것이다.
+
+        left = n_left #새로운 탐색을 위해 시작점의 값을 바꾼다.
+        
+    right = max(n_right, right) 
+    #뒤에 나온 시작점의 값이 앞의 끝점 값보다 크거나 같은 상황이다.
+    #이때는 앞의 끝점과 뒤에 나온 끝점하고 비교해서 더 큰 값으로 끝점의 값을 바꾸어주어야한다.
+    
+distance = distance + right - left
+
+print(distance)

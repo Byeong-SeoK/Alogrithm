@@ -1,0 +1,61 @@
+from collections import deque
+import sys
+
+def bfs(x,y, visited):
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+
+    color = image[x][y] #시작점의 색깔
+    while queue:
+        pos = queue.popleft()
+
+        x = pos[0]
+        y = pos[1]
+
+        visited[x][y] = True
+
+        for i in range(0, 4):
+            nx = x+dx[i]
+            ny = y+dy[i]
+
+            if(0 <= nx < N and 0 <= ny < N and not visited[nx][ny]):
+                if (image[nx][ny] == color):
+                    visited[nx][ny] = True
+                    queue.append((nx, ny))
+
+
+N = int(sys.stdin.readline())
+
+image= [] #RGB로 이루어진 이미지
+for _ in range(0, N):
+    tmp = list(sys.stdin.readline().rstrip()) #rstrip을 통해서 "\n"이라는 escape sequence를 지운다.
+    image.append(tmp)
+
+ordinary = 0 #정상인이 구분하는 영역 수
+ord_visited = [[False]*N for _ in range(0, N)] #정상인일 때의 탐색 방문 여부
+
+for i in range(0, N):
+    for j in range(0, N):
+        if(not ord_visited[i][j]): #이미 방문한 곳은 방문하지 않도록 조건을 건다.
+            queue = deque([(i, j)])  # bfs 탐색을 위한 큐
+            bfs(i, j, ord_visited)
+            ordinary = ordinary+1
+
+
+unordinary = 0 #적록색맹이 구분하는 영역 수
+unord_visited = [[False]*N for _ in range(0, N)] #적록색맹인 일 때의 탐색 방문 여부
+
+for i in range(0, N): #아래 이중 for문 과정을 통해 G인 값을 R로 변경한다.
+    for j in range(0, N):
+        if(image[i][j] == 'G'):
+            image[i][j] = 'R'
+
+
+for i in range(0, N):
+    for j in range(0, N):
+        if(not unord_visited[i][j]):
+            queue = deque([(i, j)])
+            bfs(i,j, unord_visited)
+            unordinary = unordinary+1
+
+print(ordinary, unordinary)
