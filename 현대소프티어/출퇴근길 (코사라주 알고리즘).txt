@@ -1,0 +1,85 @@
+#코사라주 알고리즘 문제
+#SCC (strongly connected component)를 찾아서 분류하는 알고리즘이다.
+#SCC란 어떤 그룹 X에 있는 임의의 두 정점 A,B에 대해서 항상 A->B로 가는 경로가 존재하면 그 그룹을 SCC라 한다.
+#즉, SCC의 조건은
+#1. 같은 SCC 내의 임의의 두 정점 A,B사이의 경로가 항상 존재한다.
+#2. 서로 다른 SCC에서 뽑은 임의의 두 점 A,B 사이의 경로 A->B로 가는 경로와 B->A로 가는 경로는 동시에 존재할 수 없다. (SCC 끼리는 사이클이 존재하지 않는다.)
+# 코사라주 알고리즘을 수행하기 위해서 우리는 주어지는 방향 그래프와 주어지는 방향 그래프의 방향을 모두 역으로 뒤집은 역방향 그래프를 준비해야 합니다.
+# 정확히는 방향 그래프, 역방향 그래프, 스택 이렇게 세가지 컨테이너가 필요합니다.
+# 우선 정방향 그래프를 DFS를 수행하며 끝나는 순서대로 스택에 삽입해줍니다. 이때 DFS는 모든 정점에 대해서 수행되어야 합니다.
+# 스택에서 pop하는 순서대로 역방향 DFS를 수행하여 한번 수행에 탐색되는 모든 정점들을 같은 SCC로 묶습니다.
+# 스택이 빌 때 까지 이 작업을 반복하고 나면 SCC를 구할 수 있습니다.
+#(위에서 언급한 스택은 재귀 시 재귀함수가 들어가는 스택을 의미한다.)
+#따라 이 문제에서 예시를 보면 집이 5번이고 사무실이 6번인데 가는 경로중 하나가
+#5->4->1->7->1->6으로 출근할 수 있는데 이때의 1->7->1이 SCC에 해당한다.
+#이러한 SCC를 모두 찾아야하는 것이 이 문제의 핵심이므로 코사라주 알고리즘을 사용한다.
+#그리고 출근, 퇴근 각각에 코사라주 알고리즘을 적용해야하므로 총 4번의 dfs를 진행해야한다.
+
+import sys
+
+sys.setrecursionlimit(1000000)
+#dfs 재귀의 깊이를 늘려주는 것이다.
+
+def dfs(node, arr, visited):
+    #재귀를 통한 dfs를 사용해야 목적지를 도착하고도 난 이후에도 다른 노드들에 탐색하여
+    #해당 노드를 통해서도 목적지에 도착할 수 있는지 탐색할 수 있다.
+    #bfs에서는 재귀를 사용하지않고 queue를 사용하기 때문에 queue에서 목적지 노드 값이
+    #pop되면 bfs를 더 이상 진행하지 못하고 종료하게 된다.
+    #그래서 사이클이 있는 노드들에 대해서는 더 이상 탐색을 할 수 없게 된다.
+
+    if (visited[node] == True):
+        #dfs를 하기 전에 최종 목적지를 True로 정의 했기 때문에 더 깊게 탐색하지 않고 이전으로 돌아간다.
+        #그리고 만약 node번째 graph배열에서 목적지노드값 말고 다른 노드들도 있으면 해당 노드들까지 탐색할 수 있게 된다.
+        return
+
+    visited[node] = True
+    for i in arr[node]:
+        dfs(i, arr, visited)
+
+    return
+
+
+N, M = map(int, sys.stdin.readline().split())  # N은 정점 M은 간선
+
+graph = [[] for _ in range(0, N + 1)]  # 정방향 그래프
+reverse_graph = [[] for _ in range(0, N + 1)]  # 역방향 그래프
+# 이 역방향 그래프가 필요한 이유
+# 1번 예시에서 dfs를 통해 도착지점까지 탐색을 한다고 할 때
+# 모든 노드들에 대해서 탐색을 하게 되면 시간 복잡도가 너무 커지게 된다.
+# 심지어 4번 노드 같은 경우에는 1번, 3번과 사이클을 이루게 되어
+# dfs 탐색을 중복으로 하게 된다. 반면에 역방향 그래프를 이용하면
+# 1->4일때는 정방향 dfs를 하고 4->3일때 정방향 dfs를 하는게 아니라
+# 3->4로 역방향 dfs를 하여 3에서 4로 갈 수 있으면 4에서 3으로 갈 수 있고
+# 이는 즉 1->4->3이 가능함을 보여주게 된다.
+# 그리고 퇴근할 때도 이와 같은 방법을 사용하면 된다.
+
+for _ in range(0, M):
+    start, end = map(int, sys.stdin.readline().split())
+    graph[start].append(end)
+    reverse_graph[end].append(start)
+
+home, office = map(int, sys.stdin.readline().split())
+
+home_to_office = [False] * (N + 1) #정방향 그래프일 때 집에서 사무실까지
+home_to_office[office] = True
+#도착지점에서는 더 이상 dfs진행할 필요가 없으므로 이를 True로 하여 접근하자마자 return되도록 만든다.
+dfs(home, graph, home_to_office)
+
+office_to_home = [False] * (N + 1) #정방향 그래프일 때 사무실에서 집까지
+office_to_home[home] = True
+#도착지점에서는 더 이상 dfs진행할 필요가 없으므로 이를 True로 하여 접근하자마자 return되도록 만든다.
+dfs(office, graph, office_to_home)
+
+home_to_office_rev = [False] * (N + 1) #역방향 그래프일 때 집에서 사무실까지
+dfs(home, reverse_graph, home_to_office_rev)
+
+office_to_home_rev = [False] * (N + 1) #역방향 그래프일 때 사무실에서 집까지
+dfs(office, reverse_graph, office_to_home_rev)
+
+count = 0 #출근, 퇴근 모두 들릴 수 있는 노드를 받는 변수
+for i in range(1, N + 1):
+    if (home_to_office[i] and office_to_home[i] and home_to_office_rev[i] and office_to_home_rev[i]):
+        #이 4가지 모두가 True일 때가 출퇴근시 모두 들릴 수 있는 노드이므로 이때만 counting하도록 한다.
+        count = count + 1
+
+print(count - 2) #집과 사무실은 제외해야하므로 2를 뺀다.
