@@ -1,0 +1,89 @@
+def rec(p):
+    #solution 함수는 main함수의 역할이므로 recursion 시키지 않고
+    #recursion을 위한 다른 함수를 하나 만들어서 recursion을 시킨디ㅏ.
+    #즉, 이 함수는 search와 isCheck함수를 재귀적으로 호출하여 동작하게 만들기 위해
+    #존재하는 recursion 함수이댜.
+
+    result = ''
+
+    if (len(p) == 0):
+        return ""
+    else:
+        u, v = search(p) #u, v를 찾는다.
+        correct = isCheck(u) #u가 올바른 문장인지 확인한다.
+
+        if (correct): 
+            #u가 올바른 문장이면 v에 대해 위의 과정을 진행하고
+            #result값에 u와 위 과정을 진행한 v를 더 한다.
+            result = u + rec(v)
+        else:
+            temp = "("
+            temp = temp + rec(v)
+            temp = temp + ")"
+            u = u[1:len(u)-1] #string은 배열이 아니므로 pop을 하는 것이 아니라 슬라이싱으로 다룬다.
+
+            for i in range(0, len(u)):
+                if (u[i] == '('):
+                    temp = temp + ")"
+                else:
+                    temp = temp + "("
+
+            result = result + temp
+
+        return result
+
+
+def search(w):
+    u = ''
+    v = ''
+
+    left_side = 0 #(의 개수를 받는 변수
+    right_side = 0 #)의 개수를 받는 변수
+
+    for i in range(0, len(w)):
+        if (w[i] == '('):
+            left_side += 1
+            u = u + w[i]
+        else:
+            right_side += 1
+            u = u + w[i]
+
+        if (left_side == right_side):
+            #(와 )의 개수가 같으면 균형잡힌 문장이므로 return 시킨다.
+            v = w[i + 1:]
+            #v는 u를 뺀 나머지이므로 배열을 슬라이싱 하는 것으로 이를 정의한다.
+
+            return u, v
+
+
+def isCheck(u):
+    stack = []
+    #parameter로 들어온 u가 올바른 문장이지 아닌지 판단하기 위한 스택이다.
+    #u에 하나씩 접근해가다가 (를 발건하면 스택에 이를 추가하고
+    #)를 발견하면 (를 스택에서 빼는 것으로 올바른지 판단한다.
+    #이때 만약 )가 나왔는데 스택이 비어있다면(문장이 ))( 이런 형태여서 앞에 ( 가 없다면)
+    #올바르지 않은 문장이므로 False를 return하도록 한다.
+
+    for i in range(0, len(u)):
+        if (u[i] == '('):
+            stack.append(u[i])
+        else:
+            if (len(stack) == 0):
+                #앞에 (가 없이 )만 있는 경우여서 잘못됐기 때문에 False를 return하도록 한다.
+                return False
+            else:
+                stack.pop()
+
+    if (len(stack) == 0):
+        #올바르게 다 짝지어져서 스택이 비어있는 경우이다.
+        return True
+    else:
+        #이 경우는 스택에 ( 만 남은 경우이다. 즉, 잘못된 문장이다.
+        return False
+
+
+def solution(p):
+    #main 함수의 역할
+    answer = rec(p)
+
+    return answer

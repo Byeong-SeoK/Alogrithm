@@ -1,0 +1,25 @@
+import sys
+input = sys.stdin.readline
+
+TC = int(input())
+
+while TC:
+    day = int(input())
+    price = list(map(int, input().split()))
+
+    profit = 0 #주식을 통해 얻을 수 있는 최대 이익
+    max_value = 0 #주식의 최대 값
+    for i in range(len(price)-1, -1, -1):
+        #price에 대해 거꾸로 접근하여 이전 값이 현재 값보다 크면
+        #price 배열은 원래 감소하고 있다는 것이므로 이전 값으로 max를 바꾸고
+        #이전 값이 max값보다 작다면 이 max일 때 해당 타임에 샀던 주식을 팔 것이므로
+        #최대 이익 변수에 max - 이전 값을 추가하도록 한다.
+
+        if(price[i] > max_value):
+            max_value = price[i]
+        else:
+            profit = profit + (max_value - price[i])
+
+    print(profit)
+
+    TC = TC - 1

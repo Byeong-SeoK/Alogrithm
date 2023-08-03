@@ -1,0 +1,70 @@
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+
+negative = []
+positivie = []
+#수를 묶을 때(묶어서 곱할 때)
+#음수 음수 = 양수, 음수 0 = 0, 음수 양수 = 음수 이러므로
+#음수랑 양수는 같이 묶으면 최대값을 구할 수 없다.
+#그러므로 음수에서 0까지 하나의 배열로 묶고 양수는 또 다른 하나의 배열로 묶는다.
+
+result = 0
+
+for _ in range(0, N):
+    temp = int(input())
+
+    if(temp < 1):
+        negative.append(temp)
+    elif(temp == 1):
+        result = result + 1
+    else:
+        positivie.append(temp)
+
+negative.sort()
+positivie.sort(reverse=True)
+
+if(len(negative)%2 == 0): #길이가 짝수일 때는 둘 씩 딱 떨어진다.
+    for i in range(0, len(negative)-1, 2):
+        N_A = negative[i] + negative[i+1]
+        N_B = negative[i] * negative[i+1]
+
+        if(N_A >= N_B):
+            result = result + N_A
+        else:
+            result = result + N_B
+else: #길이가 홀수 일때는 항상 마지막 원소가 남으므로 이는 따로 더해준다.
+    for i in range(0, len(negative)-1, 2):
+        N_A = negative[i] + negative[i+1]
+        N_B = negative[i] * negative[i+1]
+
+        if(N_A >= N_B):
+            result = result + N_A
+        else:
+            result = result + N_B
+
+    result = result + negative[-1]
+
+if(len(positivie) % 2 == 0):
+    for j in range(0, len(positivie) - 1, 2):
+        P_A = positivie[j] + positivie[j + 1]
+        P_B = positivie[j] * positivie[j + 1]
+
+        if (P_A >= P_B):
+            result = result + P_A
+        else:
+            result = result + P_B
+else:
+    for j in range(0, len(positivie) - 1, 2):
+        P_A = positivie[j] + positivie[j + 1]
+        P_B = positivie[j] * positivie[j + 1]
+
+        if (P_A >= P_B):
+            result = result + P_A
+        else:
+            result = result + P_B
+
+    result = result + positivie[-1]
+
+print(result)

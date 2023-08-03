@@ -1,0 +1,22 @@
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+
+number = []
+for _ in range(0, N):
+    number.append(int(input()))
+
+decrease = 0 #총 감소량
+for i in range(N-2, -1, -1):
+    #항상 제일 마지막 숫자가 가장 커야하므로
+    #뒤에서부터 접근해서 앞에 있는 숫자는 그 뒤 숫자보다 작게한다.
+
+    if(number[i] < number[i+1]):
+        continue
+    else:
+        diff = number[i]-number[i+1]+1
+        number[i] = number[i] - diff
+        decrease = decrease + diff
+
+print(decrease)

@@ -1,0 +1,17 @@
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+A.sort(reverse=True)
+B.sort()
+#A배열은 내림차순으로 정렬하고 B배열은 오름차순으로 정렬한 다음
+#각 요소마다 곱했을 때 값이 가장 최소가 된다.
+
+result = 0
+for i in range(0, N):
+    result = result + A[i]*B[i]
+
+print(result)

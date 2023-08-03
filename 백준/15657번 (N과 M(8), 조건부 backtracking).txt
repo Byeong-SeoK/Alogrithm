@@ -1,0 +1,31 @@
+import sys
+input = sys.stdin.readline
+
+
+def backtrack(depth, N, M):
+    if(depth == M):
+        for i in range(0, len(order)):
+            print(order[i], end=" ")
+        print()
+
+    else:
+        for j in range(0, N):
+            if(len(order) == 0): #order의 길이가 0일 때는 항상 받아야한다.
+                order.append(num[j])
+            else:
+                if(order[-1] <= num[j]): #order의 마지막 원소가 입력받은 원소보다 작거나 같아야지만 한다.
+                    order.append(num[j])
+                else: #order의 마지막 원소가 더 크면 backtrack을 하지않고 다음으로 넘어가게 한다.
+                    continue
+
+            backtrack(depth+1, N, M)
+            order.pop()
+
+
+N, M = map(int, input().split())
+num = list(map(int, input().split()))
+
+num.sort() #배열을 오름차순으로 정렬
+
+order = []#이 문제에서는 방문했던 것을 또 방문할 수 있으므로 visited가 필요가 없다.
+backtrack(0, N, M)

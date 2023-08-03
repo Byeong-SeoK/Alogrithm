@@ -1,0 +1,23 @@
+import sys
+input = sys.stdin.readline
+
+S = input()
+#0과 1의 구역의 개수를 세고 더 작은 구역의 개수를 반환하면 된다.
+
+current = S[0]
+area0 = 0 #S에서 0이 존재하는 구역의 개수
+area1 = 0 #S에서 1이 존재하는 구역의 개수
+
+if(len(S) == 1):
+    print(0)
+else:
+    for i in range(1, len(S)):
+        if(current != S[i]):
+            if(current == '0'):
+                area0 = area0 + 1
+            else:
+                area1 = area1 + 1
+
+            current = S[i]
+
+print(min(area0, area1))

@@ -1,0 +1,61 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def bfs():
+    person = 0
+
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+
+    while queue:
+        node = queue.popleft()
+        x = node[0]
+        y = node[1]
+
+        if(campus[x][y] == 'P'):
+            person = person + 1
+
+        for i in range(0, 4):
+            nx = x + dx[i]
+            ny = y + dy[i]
+
+            if(0<= nx < row and 0 <= ny < col
+                    and not visited[nx][ny] and campus[nx][ny] != 'X'):
+                queue.append([nx, ny])
+                visited[nx][ny] = True
+                #여기다 visited를 True로 하지않고 위에서 node로 나왔을 때 True를 하면
+                #이미 방문하기 위해 queue에 들어간 지점이 아직 False인 상황이기에
+                #and not visited[nx][ny]를 만족하지 못하여 중복으로 queue에 들어가게 된다.
+                #그래서 여기서 visited를 True로 해야한다.
+
+    return person
+
+
+row, col = map(int, input().split())
+campus = []
+
+xpos, ypos = 0,0
+for _ in range(0, row):
+    temp = list(input().rstrip())
+
+    if('I' in temp):
+        xpos = _
+        ypos = temp.index('I')
+
+    campus.append(temp)
+
+#print(campus)
+#print(xpos, ypos)
+
+visited = [[False]*col for _ in range(0, row)]
+queue = deque()
+queue.append([xpos, ypos])
+
+friend = bfs()
+
+if(not friend):
+    print("TT")
+else:
+    print(friend)

@@ -1,0 +1,64 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+TC = int(input())
+
+while TC:
+    A, B = map(int, input().split())
+
+    order = ""
+    queue = deque()
+    queue.append([A, order])
+    #배열의 첫번째 index는 숫자가 들어가고 이 값을 B와 비교한다.
+    #배여르이 두번째 index는 그때까지의 명령어 순서가 들어간다.
+
+    visit = [False]*10000
+    #숫자는 항상 0과 10000사이의 숫자이므로 방문할 수 있는 숫자도 그 범위 내에 존재한다.
+    #명령어 나열이 가장 최소한이 되어야 하므로 방문한 곳은 또 방문하면 안된다.
+
+    visit[A] = True
+    
+    #이 문제가 bfs인 이유는
+    #D, S, L, R 각각 명령어를 줄 때마다 나오는 값들을 일일히 너비로 탐색하고
+    #그 탐색한 결과 값을 B와 비교했을 때 가장 먼저 일치한 지점이 명령어가 최소가 되는 지점이기 때문이다.
+    #그래서 bfs로 탐색하여 값을 구해야한다.
+    #또한 명령어 순서 변수를 만들어서 그 변수를 출력하면 bfs를 하면서 탐색되는 모든 명령어 가지수가
+    #그 변수에 들어가므로 각 명령어를 내리고 난 이후에 그때의 명령어 상태에다가 새로운 명령어를 추가해야지만
+    #특정 노드를 bfs로 탐색할 때의 명령어 순서가 올바르게 queue에 저장된다.
+    #마치 dfs에서 함수 파라미터에다가 값을 추가하는 것과 비슷한 원리이다.
+    
+    while queue:
+        node = queue.popleft()
+
+        if(node[0] == B):
+            print(node[1])
+            #print(order)
+            break
+
+        next = (2*node[0])%10000 #명령어 D를 넣는 경우
+        if(not visit[next]):
+            #order = order + "D"
+            queue.append([next, node[1]+"D"])
+            visit[next] = True
+
+        next = (node[0]-1)%10000 #명령어 S를 넣는 경우
+        #-1에 대해 10000dmfh %연산을 하면 컴퓨터구조의 특성상 9999가 나온다.
+        if(not visit[next]):
+            #order = order + "S"
+            queue.append([next, node[1]+"S"])
+            visit[next] = True
+
+        next = (10*node[0] + (node[0]//1000))%10000 #명령어 L을 넣는 경우
+        if(not visit[next]):
+            #order = order + "L"
+            queue.append([next, node[1]+"L"])
+            visit[next] = True
+
+        next = ((node[0]%10)*1000 + (node[0]//10))%10000
+        if(not visit[next]):
+            #order = order + "R"
+            queue.append([next, node[1]+"R"])
+            visit[next] = True
+
+    TC = TC-1

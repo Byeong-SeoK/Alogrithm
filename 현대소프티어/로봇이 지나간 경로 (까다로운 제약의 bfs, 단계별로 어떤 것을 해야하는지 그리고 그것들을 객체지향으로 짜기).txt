@@ -1,0 +1,145 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def check(x, y):
+    #시작점을 찾는 함수이다.
+    #모든 점이 다 시작점이 되는 것이 아니라 일부만 시작점이 가능한 이유는
+    #A 명령어를 통해서 이동하는 거리가 2칸이고 한번 방문한 곳은 여러번 방문할 수 없다.
+    #그러므로 시작점에서 갈 수 있는 방향이 2개이상인 경우에는 한 쪽으로 출발하고 다시 다른쪽 방향으로 갈 때
+    #반드시 기존에 방문했던 노드를 다시 방문하게 된다. 그러므로 이러한 지점은 제약조건 때문에 시작점이 될 수 없다.
+    #파라미터로 받은 지점에서 가능한 방문 방향이 2개이상인지 세고 만약 1개이면 시작 방향을 return하고
+    #만약 2개 이상이면 False를 return하여 다른 점이 시작점이 될 수 있는지 알아본다.
+    #처음에 올바른 방향으로 로봇을 두면 되므로 절대로 명령어의 첫번째가 L이나 R이 될 수 없다.
+    #그러므로 bfs를 한 이후 찾은 경로에 대해 명령어 순서를 정할 때 처음에는 L이나 R를 염두에 둘 필요가 없다.
+
+
+    direction = '' #해당 위치에서 어느 방향으로 가야하는지 받는 변수
+
+    count = 0 #해당 위치에서 어느 방향으로 나아갈 수 있는지 그 가지 수를 다 세는 변수
+    for i in range(0, 4):
+        nx = x+dx[i]
+        ny = y+dy[i]
+
+        if(0 <= nx < H and 0 <= ny < W and grid[nx][ny] == '#'):
+            direction = possible_direct[i] #가능한 방향을 지정한다.
+            count = count+1 #방문 가능한 방향이 존재하므로 시작점 counting에 +1을 한다.
+
+        if(count > 1): #가능한 시작 방향이 여러 개 이므로 False를 return한다.
+            return False
+
+    return direction #시작 방향이 1개이므로 출발 방향을 return한다.
+
+
+def bfs():
+    #bfs로 탐색하면서 가능한 경로에 대해 각 지점마다 어떤 방향으로 나아가야하는지 탐색한다.
+    #즉, 경로 탐색과 방향지정 및 명령어 지정을 동시에 수행하는 것이 아니라
+    #일단 이 bfs함수에서는 시작점을 기준으로 bfs로 경로 탐색하면서 각 지점에서 어떤 방향으로 가야
+    #다음 지점으로 이동할 수 있는지 즉, 방향을 지정하고 이 방향들을 배열에 저장하여 return한다.
+
+    path = [] #각 지점마다 어느 방향으로 가야할 지 저장하는 배열
+    while queue:
+        node = queue.popleft()
+        xpos = node[0]
+        ypos = node[1]
+
+        visited[xpos][ypos] = True
+
+        for i in range(0, 4):
+            nx = xpos+dx[i]
+            ny = ypos+dy[i]
+
+            if(0 <= nx < H and 0 <= ny < W and grid[nx][ny] == '#'
+                    and not visited[nx][ny]):
+
+                path.append(possible_direct[i])
+                #다음 지점으로 이동하기 위해 어떤 방향으로 서있어야 하는지 방향을 저장한다.
+
+                queue.append([nx, ny])
+
+    return path
+    #방향 배열을 return하여 추후 명령어 지정 시 이 방향 배열을 기반으로
+    #명령어 순서를 정할 수 있도록 한다.
+
+
+H, W = map(int, input().split())
+
+grid = []
+for _ in range(0, H):
+    temp = list(input().rstrip()) #rstrip을 통해서 \n을 지운다.
+    grid.append(temp)
+
+#print(grid)
+
+possible_direct = ['^', '>', 'v', '<']
+dx = [-1,0,1,0]
+dy = [0,1,0,-1]
+#0번째는 북, 1번째는 서, 2번째는 남, 3번째는 동이고
+#이 index를 이용하여 방향을 지정해주도록 한다.
+#이는 possible_direction 배열과 dx 배열, dy 배열에 적용되는 것이다.
+#시계 방향 or 반시계 방향으로 가능한 방향을 세팅해놓아야
+#향후 명령어 순서를 구할 때 index-1이나 index+1이 항상 회전된 방향이 된다.
+#그렇지 않으면 경우가 너무 복잡해져 코드가 더러워진다.
+
+visited = [[False]*W for _ in range(0, H)] #방문여부를 받는 배열
+order = [] #명령어 순서를 저장하는 배열
+
+for i in range(0, H):
+    for j in range(0, W):
+        if(grid[i][j] == "#" and check(i,j)):
+            #해당 위치가 #이면서 동시에 시작점으로 가능한 상황이다.
+
+            queue = deque()
+            queue.append([i,j])
+            print(i+1, j+1)
+            possible_path = bfs()
+
+            #print(possible_path)
+            current_direction = possible_path[0] 
+            #시작점의 방향을 기준으로 이후 노드들의 방향이 정해지므로 
+            #시작점의 방향을 변수에 담아 저장하도록 한다.
+            print(current_direction)
+
+            count = 1
+            for k in range(1, len(possible_path)):
+                if(current_direction == possible_path[k]):
+                    #처음에는 무조건 A, 이동 명령이 되므로 L이나 R을 염두에 둘 필요가 없다.
+                    #그러므로 현재 방향과 이후 방향이 같으면 이는 A를 의미하는 것이므로
+                    #count를 1 추가한다.
+                    count = count+1
+                    current_direction = possible_path[k]
+                    #그리고 같은 방향일지라도 새로운 방향으로 값을 바꾼다.
+
+                    if(count % 2 == 0):
+                        #count를 2로 나누었을 때 나머지가 0이 된다는 것은
+                        #두칸을 지나갔다는 뜻으로 A 명령어를 내린 것과 같다.
+                        
+                        order.append('A')
+                        count = 0
+                        #이때 count를 0으로 해주지 않으면 count가 계속 누적되어
+                        #A 명령어를 중복적으로 작성해야할 수 있다
+                        #그러므로 count를 항상 0으로 초기화 해야한다.
+
+                else:
+                    if(possible_direct[possible_direct.index(current_direction)-1] ==
+                            possible_path[k]):
+                        #이 경우는 possible_direct 배열 기준으로 index가 -1 된 것으로
+                        #배열의 값 기준으로 왼쪽으로 90º 돈 것과 같다. 그러므로 L에 해당한다.
+
+                        order.append('L')
+
+                    else:
+                        order.append('R')
+
+                    current_direction = possible_path[k]
+                    count = 1
+                    #이때는 count를 1로 두어서 기존의 A를 할 때 count가 up된 것에서
+                    #바뀌지 않았음을 표시해야한다.
+
+
+            for p in range(0, len(order)):
+                #원하는 값을 찾으면 이를 출력하고 프로그램을 종료시킨다.
+                
+                print(order[p], end="")
+            sys.exit()

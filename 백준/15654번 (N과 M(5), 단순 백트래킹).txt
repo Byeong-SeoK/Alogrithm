@@ -1,0 +1,29 @@
+import sys
+input = sys.stdin.readline
+
+
+def backtrack(depth, N, M):
+    if(depth == M):
+        for i in range(0, len(result)):
+            print(result[i], end=" ")
+        print()
+
+    else:
+        for j in range(0, N):
+            if(not visited[j]):
+                result.append(number[j])
+                visited[j] = True
+                backtrack(depth+1, N, M)
+                visited[j] = False
+                result.pop()
+
+
+
+N, M = map(int, input().split())
+number = list(map(int, input().split()))
+number.sort()
+
+visited = [False]*(N+1)
+result = []
+
+backtrack(0, N, M)
