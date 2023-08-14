@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+
+day = int(input()) #앞으로 몇 일이나 더 상담하는지 받는 변수
+
+counsel = [] #상담시 드는 소요시간과 받는 비용을 받는 배열
+#상담 일정 배열 앞에 [0,0]을 추가하면 안된다.
+#이후 dp배열의 값을 바꿀 때 접근 index+counsel[index][0]에서 indexError가 발생한다.
+#즉, [0,0]이 들어가고 5일 째 상담의 소요시간이 5일이라 할 때
+#5일째 상담의 index는 6이되고 결국 소요시간+해당 날짜를 더해서 10 이하임에도 불구하고
+#[0,0]때문에 6+5 = 11이 되어 만족하지 못하는 경우가 된다. 그래서 원하는 값이 나오지 않는다.
+
+
+for _ in range(0, day):
+    time, cost = map(int, input().split())
+    counsel.append([time, cost])
+
+dp = [0]*(day+1) #dp의 마지막 값은 최대로 돈을 벌 수 있는 값이다.
+
+#N이 1500000까지이므로 bottom-up 방식으로 풀면 O(N^2)이어
+#연산하는 속도가 너무 오래걸린다. 그러므로 O(N)인 top-down 방식을 쓴다.
+#top-down방식으로 풀 때는 상담 마지막 날로 부터 시작해서
+#전날의 상담을 진행했을 때 소요시간을 계산하여 N일보다 커지는지 비교하여 할지말지 결정한다.
+#또 이후 날의 dp값은 항상 최댓값을 만족하고 있는 상태이기 때문에
+#이후 날의 값과 이전 날의 값+이전 날까지의 dp값을 비교하여 더 큰 쪽을 선택하게 한다.
+
+
+for i in range(day-1, -1, -1):
+    #day-1이 counsel배열의 가장 마지막 지점에 해당한다.
+    if (counsel[i][0] + i > day):
+        dp[i] = dp[i + 1]
+    else:
+        dp[i] = max(dp[i + 1], dp[i + counsel[i][0]] + counsel[i][1])
+
+
+print(dp[0])

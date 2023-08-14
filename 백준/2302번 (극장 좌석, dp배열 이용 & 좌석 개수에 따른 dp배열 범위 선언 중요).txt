@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+
+N = int(input().rstrip()) #총 좌석의 개수
+M = int(input().rstrip()) #총 VIP의 개수
+vip = [] #VIP가 앉는 좌석 번호를 받는 배열
+for _ in range(0, M):
+    vip.append(int(input().rstrip()))
+
+dp = [0]*(N+1) #VIP가 없는 상황일 때 각 좌석 개수마다 앉을 수 있는 경우의 수를 받는 배열
+dp[0] = 1
+dp[1] = 1
+
+#dp[2] = 1인 경우는 배제해야한다. 왜냐하면 만약 좌석의 개수가 1일 때 dp[2]가 있으면 indexError가 발생하기 때문
+#있지도 않는 좌석의 경우의 수를 dp가 접근하고 있기 때문이다.
+
+#VIP가 4, 7이고 좌석의 개수가 9개일 떄 4, 7은 고정되어 이동할 수 없다.
+#즉, 123/4/56/7/89 로 좌석을 구분할 수 있고 이 구분된 곳 내에서만 좌우로 좌석을 바꾸는 것이 가능하다.
+#왜냐하면 바로 옆자리가 아닌 좌석으로는 옮길 수 없기 떄문이다.
+#그래서 123/56/89 각 범위의 dp값을 서로 곲한 것이 총 좌석을 앉는 경우의 수에 해당한다.
+#따라서 dp[3]*dp[2]*dp[2]를 하면 된다.
+
+for i in range(2, N+1):
+    dp[i] = dp[i-1]+dp[i-2]
+
+total = 1 #총 경우의 수를 받는 변수
+if(M >= 1):
+    count = 0 #이전 vip 좌석 번호 값을 받는 변수
+    for j in range(0, M):
+        total = total * dp[vip[j]-1-count]
+        #vip[j]가 예를들어 4라면 3까지 범위의 dp값을 적용해야하므로 1을 빼야한다.
+        #count를 빼는 이유는 예를 들어 4와 7사이의 56에 대해 dp값을 적용해야할 때
+        #vip[j]는 7이고 여기서 1을 빼면 6이다. 하지만 이 dp[6]을 그대로 적용하면 안되고
+        #dp[2]를 적용해야하므로 이전 vip값인 4를 해당 6에서 빼야한다. 그래서 count에 vip값을 넣어놓도록 한다.
+        count = vip[j]
+
+    total = total * dp[N-count] #마지막 vip좌석 이후부터 끝까지의 좌석에 대한 경우의 수를 추가한다.
+
+else:
+    total = dp[N]
+
+print(total)

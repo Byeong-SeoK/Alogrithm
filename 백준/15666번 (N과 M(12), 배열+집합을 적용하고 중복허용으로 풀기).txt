@@ -1,0 +1,38 @@
+import sys
+input = sys.stdin.readline
+
+def backtrack(depth, M):
+    if(depth == M):
+        for i in range(0, len(order)):
+            print(order[i], end=" ")
+        print()
+    else:
+        for i in range(0, len(number)):
+            if(len(order) == 0):
+                order.append(number[i])
+
+                backtrack(depth + 1, M)
+
+                order.pop()
+            else:
+                if(order[-1] <= number[i]):
+                    order.append(number[i])
+
+                    backtrack(depth + 1, M)
+
+                    order.pop()
+
+
+N, M = map(int, input().split())
+number = list(set(map(int, input().split())))
+#number에서 오름차순으로 M개의 숫자를 뽑아내고 이때 또 중복적인 수열은 제외하기 위해서는
+#set을 통해서 애시당초 중복적인 숫자를 제거하면 된다.
+#예를 들어 1,7,9,9 이고 M이 2일 때 결과는 1,1/1,7/1,9/7,7/7,9/9,9 가 된다.
+#이때 애시당초 list(set())을 적용하면 첫 배열은 1,7,9가 되고 여기서 중복허용 오름차순 정렬을 하면
+#별도의 어려운 backtracking 로직이 없어도 쉽게 풀 수 있다.
+
+number.sort()
+
+order = []
+
+backtrack(0, M)

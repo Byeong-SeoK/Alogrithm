@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+
+def backtrack(depth, N, M):
+    if(depth == M):
+        for i in range(0, len(order)):
+            print(order[i], end=" ")
+        print()
+    else:
+        prev = 0  # 이전의 값을 받는 변수
+        #이 값은 완전히 backtrack함수가 다시 호출되어야 0으로 초기화된다.
+        #즉, 첫 [1,9]이 끝나고 pop되어 9가 빠져 [1]이 되었을 때는
+        #backtrack함수가 다시 호출된 게 아니라 prev값이 9인 재귀 함수 내의
+        #for문을 돌고 있는 와중이므로 0으로 초기화되지 않는다.
+        #그래서 결국 이후 중복적인 9에 대해서는 prev != number[i]를 만족하지 않게 되어
+        #order에 추가되지 못하고 for문이 끝나 [1]인 시점의 재귀함수로 돌아간다.
+        #그리고 그때의 prev는 1이다. 왜냐하면 for문 내부의 backtrack함수를 호출하는 부분으로
+        #돌아갔기 때문이다. 그리고 아래의 pop을 만나 []이 되고 첫 for문이 진행되어 [7]일 때의
+        #모든 경우의 수를 탐색하게 된다.
+        for i in range(0, N):
+            if(not visited[i] and prev != number[i]):
+                order.append(number[i])
+                visited[i] = True
+                prev = number[i]
+
+                backtrack(depth+1, N, M)
+
+                visited[i] = False
+                order.pop()
+
+
+N, M = map(int, input().split())
+number = list(map(int, input().split()))
+
+number.sort() #number를 오름차순으로 정렬
+
+
+order = [] #수열을 받는 배열
+
+visited = [False]*N
+
+backtrack(0, N, M)
