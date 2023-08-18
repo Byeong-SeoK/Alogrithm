@@ -1,0 +1,48 @@
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+
+def preorder(node): #전위 탐색(루트, 왼쪽 자식, 오른쪽 자식)을 하는 함수
+    print(node, end="")
+
+    for i in range(0, len(tree[node])):
+        child = tree[node][i]
+
+        if(child != "."):
+            preorder(child)
+
+
+def inorder(node): #중위 탐색(왼쪽 자식, 루트, 오른쪽 자식)을 하는 함수
+    if(node != "."):
+        inorder(tree[node][0])
+        print(node, end="")
+        inorder(tree[node][1])
+
+
+def postorder(node): #후위 탐색(왼쪽 자식, 오른쪽 자식, 루트)을 하는 함수이다.
+    for i in range(0, len(tree[node])):
+        child = tree[node][i]
+
+        if(child != "."):
+            postorder(child)
+
+    print(node, end="")
+
+
+tree = {}
+#0번째는 A, 1번째는 B 순서로 각 노드의 자식 노드 배열을 받는 사전이다.
+#또 이때 자식 노드 배열에서 앞에 있는 것이 왼쪽에 있는 자식이고 뒤에 있는 것이 오른쪽에 있는 자식이다.
+for _ in range(0, N):
+    parent, child1, child2 = input().split()
+    tree[parent] = [child1, child2]
+
+
+preorder('A') #A가 항상 루트 노드이므로 A를 넣는다.
+print()
+
+inorder('A')
+print()
+
+postorder('A')
+print()
