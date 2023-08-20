@@ -1,0 +1,45 @@
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+
+max_score = [0]*3
+min_score = [0]*3
+#열의 개수는 항상 3개이고 행이 N개 있다.
+#열의 개수가 고정이므로 dp배열을 2차원 배열로 만드는 것이 아니라 길이가 3인1차원 배열로 만들어도 된다.
+#즉, 각 지점은 각 행 일때 각 열마다 최대 or 최소 값을 가지고 있는 것이다.
+
+max_temp = [0]*3
+min_temp = [0]*3
+#위의 max_score, min_score는 한 행의 모든 연산이 끝나고 각 열에 대한 최대값과 최소값을 저장하는 배열이다.
+#이 배열은 각 행열에 대해 최대값, 최소값 연산을 하여 임시적으로 저장하는 배열로
+#모든 연산이 끝나고 이 임시배열에 있는 최대값 최소값을 max_score, min_score로 넘긴다.
+
+for i in range(0, N):
+    a, b, c = map(int, input().split())
+    #미리 2차원 배열에 저장하는 것도 메모리 초과 오류가 발생한다.
+    #그래서 매 입력 상황마다 최대, 최소값을 구해서 그 값을 가지고 있도록 한다.
+    #a,b,c각각의 값은 순서대로 0번째, 1번째, 2번쨰 index의 값이다.
+    #이때 a는 2번째 index의 값에는 영향을 주지 못하므로 0,1 index에 대해서만 연산을 신경쓰면 된다.
+    #나머지 b,c도 마찬가지인 상황이므로 max_score에 접근하는 상황에 따라 맞게 분류하여 연산하면 된다.
+
+    for j in range(0, 3):
+        if(j == 0):
+            max_temp[j] = a + max(max_score[j], max_score[j+1])
+            min_temp[j] = a + min(min_score[j], min_score[j+1])
+
+        elif(j == 1):
+            max_temp[j] = b + max(max_score[j-1], max_score[j], max_score[j+1])
+            min_temp[j] = b + min(min_score[j-1], min_score[j], min_score[j+1])
+
+        else:
+            max_temp[j] = c + max(max_score[j-1], max_score[j])
+            min_temp[j] = c + min(min_score[j-1], min_score[j])
+
+
+    for k in range(0, 3):
+        max_score[k] = max_temp[k]
+        min_score[k] = min_temp[k]
+
+
+print(max(max_score), min(min_score))

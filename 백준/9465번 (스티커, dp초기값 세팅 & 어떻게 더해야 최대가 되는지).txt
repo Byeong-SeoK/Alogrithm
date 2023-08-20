@@ -1,0 +1,43 @@
+import sys
+input = sys.stdin.readline
+
+TC = int(input())
+
+while TC:
+    N = int(input())
+
+    sticker = []
+    for _ in range(0, 2):
+        temp = list(map(int, input().split()))
+        sticker.append(temp)
+
+    if(N == 1):
+        print(max(sticker[0][0], sticker[1][0]))
+    else:
+        #대각선 방향으로 있는 값들을 서로 더한 값이 최대가 된다.
+
+        sticker[1][1] = sticker[1][1] + sticker[0][0]
+        sticker[0][1] = sticker[0][1] + sticker[1][0]
+        #첫 00+11과 10+01을 하는 이유는
+        #먼저 대각선 끼리 더하는 것이 최대값을 갖는 과정이므로 대각선 방향으로 더하도록 한다.
+        #그리고 dp문제에서 초기값 세팅처럼 이 과정도 초기값 세팅 과정에 해당한다.
+        #아래 for문에서 2부터 접근하여 1열에 대해 값을 비교하는데 이때 11과 01은 비교 대상에 들어가지만
+        #위에서 덧셈을 하지 않으면 11과 01까지 만들어진 최대값이 11+00, 01+10은 반영이 안된다.
+        #그래서 00, 10의 값도 반영하기 위해서 해당 덧셈을 하는 것이다.
+
+        # 문제 풀이 접근 방식
+        # 만약 dp[0][3] 이 최대가 되려면 dp[1][2] 를 선택하거나 dp[1][1] 을 선택해야 한다.(대각선 덧셈이 최대가 되므로)
+        # dp[1][1] 을 선택시 그 오른쪽옆인 dp[1][2] 는 당연히 선택이 안될 것이고, dp[3][0] 의 왼쪽 옆인 dp[0][2] 도 선택이 안될 것이다.
+        # 따라서 그 열까지의 최댓값을 구하려면 dp[0][i]이면 dp[1][i-1] 과 dp[1][i-2] 중 큰 값을 자기 자신과 더하고,
+        # dp[1][i]이면 dp[0][i-1] 과 dp[0][i-2] 중 큰 값을 자기 자신과 더하면 된다.
+        #즉, 자신의 자리에서 전 열의 대각선 또는 전전 열의 대각선 둘 중 큰 값과 자신을 더한 값이 항상 최대가 될 것이다.
+        #그리고 그 열의 최댓값은 dp[0][n] 과 dp[1][n] 둘 중 큰 값으로 정하면 된다.
+
+
+        for i in range(2, N):
+            sticker[0][i] = sticker[0][i] + max(sticker[1][i-1], sticker[1][i-2])
+            sticker[1][i] = sticker[1][i] + max(sticker[0][i-1], sticker[0][i-2])
+
+        print(max(sticker[0][N-1], sticker[1][N-1]))
+
+    TC = TC-1
