@@ -1,0 +1,42 @@
+import sys
+input = sys.stdin.readline
+sys.setrecursionlimit(10**6)
+
+def postorder(start, end):
+    if(start > end):
+        #아래 탐색이 사실상 2진 탐색에 해당한다.
+        #그렇기 때문에 첫 시작점이 끝 점을 넘어서는 시점이 종료조건이 된다.
+        return
+
+    mid = end+1 #일단 subTree의 범위의 끝지점을 end+1로 파라미터로 받은 범위 끝까지로 설정한다.
+    for i in range(start+1, end+1):
+        #반목문을 통해서 subtree를 찾는다.
+        if(tree[start] < tree[i]):
+            #즉, tree[start]보다 tree[i]값이 더 커지면
+            #tree[i]는 tree[start]의 오른쪽 자식에 해당한다는 것을 의미한다.
+            #그렇기 대문에 start부터 i-1까지가 start의 왼쪽 자식들의 subTree가 된다고 볼 수 있다.
+            #그래서 tree[start]의 오른쪽 자식에 해당하는 index를 mid에 저장하고
+            #이후 탐색시 start부터 mid-1까지를 통해서 왼쪽 subTreee를
+            #mid부터 end까지를 통해서 오른쪽 subTree를 탐색하도록 한다.
+
+            mid = i
+            break
+
+    postorder(start+1, mid-1) #start의 왼쪽 subTree에 대해 탐색한다.
+    postorder(mid, end) #start의 오른쪽 subTree에 대해 탐색한다.
+    #이떄 start는 루트노드에 해당하므로 postorder 탐색 범위에 들어가면 안된다.
+    #그리고 입력값이 루트, 왼쪽, 오른쪽으로 주어졌으므로 start+1이
+    #항상 start의 왼쪽 자식을 가리키고 있다.
+
+    print(tree[start]) #2진 탐색을 하듯이 쭉 깊게 들어갔을 때의 start값이 원하는 값에 해당한다.
+
+
+tree = []
+while True:
+    #입력이 없을 때가 postorder 탐색의 시작 조건이므로 try except로 처리한다.
+    try:
+        tree.append(int(input()))
+    except:
+        break
+
+postorder(0, len(tree)-1)
