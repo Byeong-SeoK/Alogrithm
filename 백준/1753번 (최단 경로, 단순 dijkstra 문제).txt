@@ -1,0 +1,52 @@
+import heapq
+import sys
+input = sys.stdin.readline
+
+
+def dijkstra(node):
+    heap = []
+    heapq.heappush(heap, [0, node])
+    #힙에 현재 위치까지 드는 비용과 현재 위치를 넣는다.
+
+    visited[node] = 0
+    #시작점까지 가는 비용은 0이므로 visited의 node번째를 0으로 정의한다.
+
+    while heap:
+        current_weight, current_position = heapq.heappop(heap)
+
+        if(visited[current_position] < current_weight):
+            #현재 알고 있는 비용이 새로이 알게 된 비용보다 싸면 더 이상 탐색할 필요가 없다.
+            continue
+        else:
+            for weight, next_position in graph[current_position]:
+                next_weight = weight + current_weight
+                #다음 지점으로 가는 비용은 현재 지점까지의 비용에 다음으로 가기 위한 비용을 더한 것이다.
+
+                if(visited[next_position] > next_weight):
+                    #만약 가려고자하는 지점에 대한 현재 알고 있는 비용이
+                    #새로이 알게 된 비용보다 비싸면 새로이 알게 된 비용으로 교체한다.
+                    heapq.heappush(heap, [next_weight, next_position])
+                    visited[next_position] = next_weight
+
+
+V, E = map(int, input().split()) #V는 정점의 개수 E는 간선의 개수이다.
+K = int(input()) #K는 시작점이다.
+
+graph = [[] for _ in range(0, V+1)]
+for _ in range(0, E):
+    u, v, w = map(int, input().split())
+    graph[u].append([w, v])
+    #최소비용으로 start에서 end로 가야하므로
+    #최소힙을 사용하기 위해 기준이 되는 비용이 도착점 보다 먼저 들어간다.
+    #최소힙이 비용을 기준으로 정렬시켜주기 때문이다.
+
+
+visited = [1e9] * (V+1) #각 지점까지의 최소 비용을 받는 배열이다.
+
+dijkstra(K)
+
+for i in range(1, len(visited)):
+    if(visited[i] == 1e9):
+        print("INF")
+    else:
+        print(visited[i])

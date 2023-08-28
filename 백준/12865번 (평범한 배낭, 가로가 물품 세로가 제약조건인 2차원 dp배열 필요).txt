@@ -1,0 +1,36 @@
+import sys
+input = sys.stdin.readline
+
+N, K = map(int, input().split())
+#N은 물품의 수이고 K는 준서가 버틸 수 있는 무게이다.
+
+item = [[0,0]]
+for _ in range(0, N):
+    W, V = map(int, input().split())
+    item.append([V, W])
+
+#print(item)
+
+knapsack = [[0 for _ in range(0, K+1)] for _ in range(0, N+1)]
+#배낭문제에 있어서 dp배열은 행은 물품의 개수 열은 제약조건이 된다.
+#print(knapsack)
+
+for i in range(1, N+1):
+    for j in range(1, K+1):
+        value, weight = item[i]
+
+        if(j < weight):
+            knapsack[i][j] = knapsack[i-1][j]
+            #만약 최대로 버틸 수 있는 무게가 넣으려는 물품의 무게보다 가볍다면
+            #해당 물품은 가방에 넣을 수 없다. 그러므로 이전에 물품을 넣고 빼는 모든 상황의
+            #최대값을 가지고 있는 직접 상황의 값으로 덮어쓴다.
+        else:
+            #만약 버틸 수 있는 무게가 물품의 무게보다 무거운 경우
+            #이전의 값을 그대로 덮어쓸지 아니면 새로운 물품을 넣을 것이기 때문에
+            #j-weight인 지점으로 가서 그 상황에 대해 새로운 물품을 넣을 때의
+            #그 가치르 비교하여 더 큰 가치인 것을 선택하도록 한다.
+            #이때 j-weight인 지점을 가는 이유는 새로운 물품을 넣기 위해서는
+            #가방에 들어있던 물품을 빼고 다시 넣어야할 수도 있기 때문이다.
+            knapsack[i][j] = max(value + knapsack[i-1][j-weight], knapsack[i-1][j])
+
+print(knapsack[N][K])

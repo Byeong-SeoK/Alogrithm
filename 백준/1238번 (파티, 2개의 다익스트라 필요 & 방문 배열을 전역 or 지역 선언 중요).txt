@@ -1,0 +1,100 @@
+import heapq
+import sys
+input = sys.stdin.readline
+
+def party_dijkstra(node):
+    #집에서 파티장으로 가는 다익스트라 함수이다.
+    
+    party_visited = [1e9] * (N + 1)
+    #각 마을에서 파티장까지 가는 최단 경로가 다 다르므로
+    #다익스트라 함수가 호출될 때 마다 최단 경로를 받는 배열을 만들어야 한다.
+    #만약 전역 배열로 하면 이전의 최단 경로가 이후의 최단 경로 배열에 영향을 준다.
+
+    heap = []
+    heapq.heappush(heap, [0, node])
+
+    party_visited[node] = 0
+
+    while heap:
+        current_time, current_position = heapq.heappop(heap)
+
+        if(current_position == X):
+            #파티장에 도착한 상황이므로 더 이상의 탐색을 할 필요가 없다.
+            #그래서 이때의 최단 경로를 visited배열에 저장하도록 한다.
+            #그리고 이떄 N번 마을에서 X번 마을까지의 최단 경로이므로
+            #그 값은 항상 party_visited의 X번에 담겨져 있다.
+            #왜냐하면 party_visited 배열은 특정 지점에서 i번째까지의 최단 경로를 i번에 저장하기 때문이다.
+            visited[i] = visited[i] + party_visited[X]
+            return
+        
+        else:
+            if(party_visited[current_position] < current_time):
+                continue
+            else:
+                for time, next_position in road[current_position]:
+                    next_time = time + current_time
+
+                    if(party_visited[next_position] > next_time):
+                        heapq.heappush(heap, [next_time, next_position])
+                        party_visited[next_position] = next_time
+
+
+def home_dijkstra(node):
+    #파티장에서 집으로 갈 때 사용하는 다익스트라 함수이다.
+    
+    home_visited = [1e9] * (N + 1)
+    #이때 home_visited 배열은 딱 한번만 선언되고 호출되기 때문에
+    #전역 배열로 선언하여도 괜찮지만, 메모리 측면에서 함수안에 배열을 넣는 것이 좋다.
+
+    heap = []
+    heapq.heappush(heap, [0, node])
+
+    home_visited[node] = 0
+
+    while heap:
+        current_time, current_position = heapq.heappop(heap)
+
+        if(home_visited[current_position] < current_time):
+            continue
+        else:
+            for time, next_position in road[current_position]:
+                next_time = time + current_time
+
+                if(home_visited[next_position] > next_time):
+                    heapq.heappush(heap, [next_time, next_position])
+                    home_visited[next_position] = next_time
+
+    for j in range(1, N+1):
+        #위에는 단순 다익스트라 알고리즘이고 while문을 빠져나간 시점에
+        #home_visited 배열에는 X번 마을에서 각 마을까지의 최단 거리의 값이 담겨있다.
+        #그래서 이 값을 반복문을 통해 visited 배열에 누적하여 저장할 수 있도록 한다.
+        visited[j] = visited[j] + home_visited[j]
+
+
+
+N, M, X = map(int, input().split())
+#N은 학생 수, M은 마을 사이의 간선의 수, X는 마을의 수이다.
+
+road = [[] for _ in range(0, M+1)]
+for _ in range(0, M):
+    start, end, time = map(int, input().split())
+    road[start].append([time, end])
+
+#print(road)
+
+visited = [0]*(N+1) #집과 파티장을 오고 가는 최단 경로의 합을 담는 배열이다.
+
+for i in range(1, N+1):
+    #파티장으로 가는 것은 각 학생이 각자의 마을에서 X번 마을로 가는 것이므로
+    #각 학생마다 최소 비용의 거리가 다 다르다.
+    #그래서 반복문을 통해 총 N번의 다익스트라를 해야한다.
+    party_dijkstra(i)
+
+home_dijkstra(X)
+#파티장에서 집으로 가는 최단 경로는 N번 다익스트라를 할 필요없이
+#한번의 다익스트라를 통해서 X번에서 각 마을로 가는 최단 경로를 구하면된다.
+#그래서 한번만 호출하면 된다.
+
+#print(visited)
+
+print(max(visited))

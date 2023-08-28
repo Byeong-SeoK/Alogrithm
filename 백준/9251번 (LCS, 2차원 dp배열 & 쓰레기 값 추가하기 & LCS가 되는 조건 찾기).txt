@@ -1,0 +1,46 @@
+import sys
+input = sys.stdin.readline
+
+sen1 = " "+input().rstrip()
+sen2 = " "+input().rstrip()
+#dp에 접근할 때 1부터 접근하기 위해서 " "라는 쓰레기 값을 앞에 임의로 추가한다.
+
+dp = [[0]*(len(sen2)) for _ in range(0, len(sen1))]
+#2차원 dp배열을 선언해야하는 이유
+#문자열 2개를 가지고 공통으로 들어있는 부분 문자열중 가장 긴 문자열을 골라야한다.
+#이때, 두 문자열을 각각 행과 열로 두고 비교를 하고 또 이전 것은 같더라도 고르지 못하게 해야하기 때문에
+#2차원 dp배열을 선언하고 각각의 index의 value는 그때의 가장 긴 문자열의 길이를 갖도록 한다.
+
+#문제 풀이 방식
+# X[i] == Y[j]일 때
+# LCS(Xi, Yj) = LCS(Xi - 1, Yj - 1) + 1
+#
+# X[i] != Y[j]일 때
+# LCS(Xi, Yj) = LCS(Xi - 1, Yj - 1)
+# LCS(Xi, Yj) = max(LCS(Xi - 1, Yj), LCS(Xi, Yj - 1))
+#
+# 1. X[i] == Y[j]
+# 먼저 X[i] == Y[j]일 때는 각 문자열에 X[i], Y[j]가 추가되기
+# 이전의 LCS의 길이(= LCS(Xi - 1, Yj - 1))에 1만큼 더해주면 된다.
+# 왜냐하면 2차원 배열에서 xi, yj를 선으로 쭉 그어놓고 그 아래에 있는 것만 선택이 가능하기 때문이다.
+# 그래서 xi-1, yj-1인 부분이 가장 긴 문자열을 가지고 있다고 볼 수 있다.
+#
+# 2. X[i] != Y[j]
+# 다음으로 X[i] != Y[j]일 때 마지막 글자가 다르다고 각 문자열에 X[i], Y[j]가 추가되기
+# 이전의 LCS의 길이(= LCS(Xi - 1, Yj - 1))를 그대로 가져오면 LCS의 길이를 손해볼 수 있다.
+# 문자열 ACB와 ABA를 예로 들어보자. 문자열 ACB와 ABA의 LCS는 AB이다.
+# 하지만 마지막 글자인 B와 A가 다르다고 LCS(X3 - 1, Y3 - 1)를 그대로 가져오면 LCS는 A가 되어 버리는 것이다.
+# 그래서 우리는 마지막 글자가 다를 때에는 각 문자열의 마지막 글자들이 따로 한 글자씩 추가 되었을 때의
+# LCS (= LCS(Xi - 1, Yj), LCS(Xi, Yj - 1) ) 중 큰값을 가져와야 한다.
+
+for i in range(1, len(sen1)):
+    for j in range(1, len(sen2)):
+        if(sen1[i] == sen2[j]):
+            #sen1과 sen2에서 같은 문자를 선택하는 경우
+
+            dp[i][j] = dp[i-1][j-1]+1
+        else:
+            dp[i][j] = dp[i][j] + max(dp[i-1][j], dp[i][j-1])
+
+print(dp)
+print(dp[-1][-1])
