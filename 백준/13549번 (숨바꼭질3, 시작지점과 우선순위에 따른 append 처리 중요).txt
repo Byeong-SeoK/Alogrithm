@@ -1,0 +1,56 @@
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+a, b = map(int, input().split())
+#a는 수빈이가 있는 위치이고 b는 동생이 있는 위치이다.
+
+limit = 100001
+time = [0] * limit
+
+
+def bfs(x, y):
+    q = deque()
+    
+    if x == 0:
+        #만약 시작지점이 0이면 x2나 -1을 할 수 없고 항상 +1만 가능하다.
+        #그러므로 시작지점을 1로 옮겨준다.
+        #그리고 마지막 시간 값에 +1을 해주어 이 동작의 소요시간도 포함되게 한다.
+        q.append(1)
+        
+    else:
+        #시작지점이 0이 아니면 x2, +1, -1 다 가능하므로 그대로 queue에 넣는다.
+        q.append(x)
+
+    while q:
+        x = q.popleft()
+        
+        if y == x:
+            #동생을 찾으면 그때의 시간을 반환한다.
+            return time[x]
+
+        for nx in (x - 1, x + 1, x * 2):
+            if 0 <= nx < limit and time[nx] == 0:
+                #만약 다음 지점이 범위를 넘어서면 index Error가 발생하므로 조건을 건다.
+                #그리고 또 한번 방문한 지점을 또 방문하면 최소값이 아니므로 이를 피하도록 한다.
+                
+                if nx == 2 * x:
+                    #순간이동할 때 소요시간이 0초이므로 가장 짧은 시간내에 이동이 가능하므로
+                    #이 순간이동을 가장 먼저 조건문에 작성하여 처리하도록 한다.
+                    time[nx] = time[x]
+                    q.appendleft(nx)
+                    #이때 순간이동이 제일 먼저 처리해야지만 최대한 빨리 갈 수 있으므로
+                    #appendleft를 통해서 queue의 가장 왼쪽에 자리하도록 한다.
+                    
+                else:
+                    time[nx] = time[x] + 1
+                    q.append(nx)
+
+
+if a == 0:
+    #시작지점이 0이었으므로 반드시 시작지점이 1로 옮겨진 상태에서
+    #탐색이 시작되었으므로 반환된 시간에 옮겨질 때 걸리는 시간 1초를 더한다.
+    print(bfs(a, b) + 1)
+else:
+    print(bfs(a, b))
