@@ -1,0 +1,50 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def path(visited, move):
+    #이 함수는 지나온 경로를 탐색하는 함수이다.
+    result = [] #경로를 받는 배열이다.
+
+    temp = K
+
+    for i in range(0, visited[K]+1):
+        #도착지점으로 부터 역순으로 탐색한다.
+        #이때 visited[K]+1을 해야 총 이동한 횟수만큼 반복문이 돈다.
+        result.append(temp)
+        temp = move[temp]
+    print(" ".join(map(str, result[::-1])))
+    #역순으로 탐색했으므로 정방향으로 출력하기 위해 역순 출력을 한다.
+
+
+
+def bfs(N):
+    move = [0]*100001 #이동 경로를 받는 배열
+
+    queue = deque()
+    queue.append(N)
+
+    visited = [0]*100001 #방문 여부를 받는 배열
+
+    while queue:
+        node = queue.popleft()
+
+        if(node == K):
+            print(visited[K])
+            path(visited, move) #어떤 과정을 거쳤는지 탐색한다.
+            return
+        else:
+            for next in (node*2, node+1, node-1):
+                if(0 <= next < 100001 and visited[next] == 0):
+                    queue.append(next)
+                    visited[next] = visited[node]+1
+                    move[next] = node
+                    #move배열의 next index에는 이전 node값을 저장하도록 한다.
+                    #이렇게 이전에 방문한 곳을 받고 나중에 도착점부터 역순으로 탐색하도록 한다.
+
+
+N, K = map(int, input().split())
+#N은 수빈이의 위치 K는 동생의 위치
+
+bfs(N)

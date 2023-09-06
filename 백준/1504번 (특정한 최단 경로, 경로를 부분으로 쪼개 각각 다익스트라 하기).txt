@@ -1,0 +1,59 @@
+import heapq
+import sys
+input = sys.stdin.readline
+
+def dijkstra(start, end):
+    heap = []
+    heapq.heappush(heap, [0, start])
+
+    visited = [1e9] * (N + 1)
+    visited[start] = 0
+    #이 visited배열이 전역으로 선언하면
+    #향후 지속적인 다익스트라에 영향을 주기 때문에 지역으로 선언한다.
+
+    while heap:
+        current_cost, current_pos = heapq.heappop(heap)
+
+        if(visited[current_pos] < current_cost):
+            continue
+        else:
+            for cost, next_pos in graph[current_pos]:
+                next_cos = cost + visited[current_pos]
+
+                if(next_cos < visited[next_pos]):
+                    visited[next_pos] = next_cos
+                    heapq.heappush(heap, [next_cos, next_pos])
+
+    return visited[end]
+
+
+
+N, E = map(int, input().split())
+#N은 정점의 개수, E는 간선의 개수
+
+graph = [[] for _ in range(0, N+1)]
+#각 정점에서 다른 정점으로 갈 때 [비용, 도착 정점]으로 값을 가지고 있는 배열
+#무방향성 그래프이므로 하나의 정보를 출발점과 도착점 모두에 넣어야 한다.
+for _ in range(0, E):
+    node1, node2, cost = map(int, input().split())
+    graph[node1].append([cost, node2])
+    graph[node2].append([cost, node1])
+
+#print(graph)
+
+v1, v2 = map(int, input().split())
+#v1과 v2는 반드시 지나가야할 정점을 의미한다.
+
+path1 = dijkstra(1, v1) + dijkstra(v1, v2) + dijkstra(v2, N)
+path2 = dijkstra(1, v2) + dijkstra(v2, v1) + dijkstra(v1, N)
+#v1, v2를 지나서 1에서 N까지의 최단 경로를 구하는 것이므로
+#1->v1->v2->N, 1->v2->v1->N라는 경우의 수가 나올 수 있다.
+#이때 각 경로를 쪼개어 부분 다익스트라를 진행하고
+#각 부분 다익스트라를 통해 얻은 중간 경로까지의 최솟값을 구해 합하면 그 값이 전체의 최솟값이 된다.
+
+if(path1 >= 1e9 and path2 >= 1e9):
+    #만약 최단 경로가 없으면 visited 배열의 초기값인 1e9보다
+    #경로의 총합이 더 커질 것이다. 그래서 이를 이용하여 -1을 return하도록 한다.
+    print(-1)
+else:
+    print(min(path1, path2))

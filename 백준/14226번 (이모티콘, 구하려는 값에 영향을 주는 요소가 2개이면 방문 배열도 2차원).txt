@@ -1,0 +1,67 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def bfs():
+    queue = deque()
+    queue.append([1,0,0])
+    #queue는 [이모티콘 개수, 소요시간, 현재 클립보드에 저장된 이모티콘 개수]로 값을 가지고 있다.
+
+    emoticon[0][1] = 1
+    #처음에 이모티콘 하나가 화면에 있고 그때 클립보드에는 이모티콘이 없으므로
+    #[0][1]의 값을 1로 초기화 한다.
+
+    while queue:
+        count, time, clipboard = queue.popleft()
+
+        if(count == S):
+            #현재 화면의 이모티콘 개수가 원하는 개수와 같을 때
+            #그때의 소요시간을 return 한다.
+            return time
+
+        if(not emoticon[count][count]):
+            #이 경우는 이모티콘을 복사하는 경우이다.
+            #[count][count]인 이유는 현재 화면에 표시된 이모티콘을 복사하면
+            #clipboard가 count의 값으로 바뀌기 때문에
+            #2차원 배열에서 접근해야할 행이 clipboard가 아니라 count가 되기 때문이다.
+
+            queue.append([count, time+1, count])
+            #clipboard의 값이 count와 동일하기 때문에 queue에도 count를 두번 넣는다.
+            
+            emoticon[count][count] = 1
+            #해당 위치를 방문했기 때문에 방문했다는 표시를 남긴다.
+
+        if 2 <= count + clipboard <= 1000 and not emoticon[clipboard][count + clipboard]:
+            #이 경우는 이모티콘 붙여 넣기를 하는 경우이다.
+            #이때 count+clipboard값이 범위를 벗어나면 탐색하지 않는다.
+            #또 붙여 넣기를 한 상황이므로 clipboard값은 그대로이고
+            #화면에 보이는 이모티콘의 개수는 count+clipboard가 된다.
+            #그래서 [clipboard][count+clipboard]에 접근하는 것이다.
+
+            queue.append([count + clipboard, time + 1, clipboard])
+            emoticon[clipboard][count + clipboard] = 1
+
+        if 2 <= count + clipboard <= 1000 and not emoticon[clipboard][count - 1]:
+            #이 경우는 이모티콘 삭제를 하는 경우이다.
+            #이때도 마찬가지로 count+clipboard값이 범위를 벗어나면 탐색하지 않는다.
+            #삭제할 때 clipboard에 들어있는 이모티콘 숫자는 그대로이고
+            #다만 화면에 표시되는 이모티콘 수만 1개가 줄어드므로 count-1을 한다.
+            #그래서 [clipboard][count-1]에 접근하는 것이다.
+
+            queue.append([count - 1, time + 1, clipboard])
+            emoticon[clipboard][count - 1] = 1
+
+
+
+S = int(input())
+#S는 이모티콘의 개수이다.
+
+emoticon = [[0] * 1001 for _ in range(1001)]
+#이모티콘 S개를 만드는데 걸리는 시간을 받는 배열
+#이때 시간에 영향을 주는 값이 클립보드에 저장된 이모티콘 개수와
+#현재 화면에 존재하는 이모티콘의 개수이다.
+#그래서 방문 여부를 받는 배열이 2차원 배열이 되어야 한다.
+#이때, 행은 클립보드 열은 이모티콘의 개수이다.
+
+print(bfs())

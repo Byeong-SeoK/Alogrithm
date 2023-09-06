@@ -1,0 +1,76 @@
+import sys
+input = sys.stdin.readline
+
+
+def backtrack(start, depth):
+    global success
+    #찾았는지 여부는 지역변수가 아니라 전역으로 두어
+    #함수 외부의 for문에도 영향을 줄 수 있게 해야한다.
+
+    visited[start] = True #시작점은 항상 방문한 것이므로 True로 둔다.
+
+    if(depth >= 5):
+        #depth가 5보다 커졌다는 뜻은
+        #A->B->C->D->E를 만족하는 그래프를 찾았다는 것이다.
+        #그래서 더 이상의 탐색을 멈추도록 success를 True로 바꾸고
+        #return을 하여 더 밑으로 내려가지 않도록 한다.
+        success = True
+        return
+
+    for destination in graph[start]:
+        if(not visited[destination]):
+            #방문한 적이 없는 노드이면 방문을 진행한다.
+            #그러므로 이때 depth를 +1하고 재귀함수를 호출한다.
+            backtrack(destination, depth + 1)
+
+    visited[start] = False
+    #dfs이므로 이전 재귀함수로 돌아가기전에 현재 방문한 node의
+    #visited값을 False로 바꾸고 돌아가도록 만든다.
+    #그래야 이후에 dfs 탐색할 때 해당 노드에 다시 방문할 수 있다.
+
+
+N, M = map(int, input().split())
+#N은 사람의 수, M은 친구 관계의 수
+
+graph = [[] for _ in range(0, N)] #친구 관계를 받는 배열
+for _ in range(0, M):
+    a, b = map(int, input().split())
+
+    graph[a].append(b)
+    graph[b].append(a)
+    #무방향성 그래프이므로 양쪽에 다 넣어야 한다.
+
+#print(graph)
+
+#문제 풀이 접근 방식
+#특정 노드에서 다른 노드로 이동할 때
+#방문했던 노드를 다시 방문하지 않고 이동이 가능하고
+#또 A->B->C->D->E 그래프가 그려져야 하므로
+#깊이가 5이상인 그래프가 존재할 때 문제의 조건을 만족함을 알 수 있다.
+#그래서 백트래킹을 통해서 모든 노드에 방문할 수 있는지 확인한다.
+#다만 이때 dfs형태의 백트래킹을 진행해야한다.
+#그리고 dfs의 깊이가 5이상이면 성공임을 간주하고 탈출시킨다.
+
+
+for i in range(0, N):
+    visited = [False] * N  # 해당 노드를 방문했는지 받는 배열
+
+    depth = 1  # dfs로 얼마나 깊게 탐색했는지 받는 변수
+    success = False  # A->B->C->D->E를 만족하는 그래프가 존재하는지 받는 변수
+
+    backtrack(i, depth)
+    #A->B->C->D->E를 만족하는 그래프는
+    #어느 지점에서 시작해서 어느 지점에 끝날지 모른다.
+    #그렇기 때문에 모든 사람들에 대해 일일히 dfs로 탐색해서
+    #A->B->C->D->E를 만족하는 그래프를 찾으면
+    #이 for문을 종료시키는 형태로 로직을 짜야 한다.
+
+    if (success):
+        #A->B->C->D->E가 존재하므로
+        #더 이상 탐색할 필요가 없다.
+        break
+
+if(success):
+    print(1)
+else:
+    print(0)
