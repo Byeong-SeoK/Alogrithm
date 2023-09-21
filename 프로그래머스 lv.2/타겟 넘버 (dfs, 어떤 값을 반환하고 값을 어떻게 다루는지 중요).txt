@@ -1,0 +1,23 @@
+def dfs(numbers, target, depth):
+    result = 0
+    
+    if(depth == len(numbers)):
+        if(sum(numbers) == target):
+            return 1
+        else:
+            return 0
+    
+    else:
+        result = result + dfs(numbers, target, depth+1)
+        numbers[depth] = numbers[depth]*(-1)
+        result = result + dfs(numbers, target, depth+1)
+        
+        return result
+    
+
+def solution(numbers, target):
+    answer = 0
+    
+    answer = dfs(numbers, target, 0)
+    
+    return answer

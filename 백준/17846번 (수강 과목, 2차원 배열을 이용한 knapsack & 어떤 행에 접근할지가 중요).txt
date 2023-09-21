@@ -1,0 +1,34 @@
+import sys
+input = sys.stdin.readline
+
+N, K = map(int, input().split())
+#N은 최대 공부시간, K는 과목수이다.
+
+subject = [[0,0]] #[얻을 수 있는 점수, 공부 시간]형태의 2차원 배열
+for _ in range(0, K):
+    subject.append(list(map(int, input().split())))
+
+dp = [[0 for _ in range(N+1)] for _ in range(K+1)]
+#dp배열은 행이 과목수 열이 공부시간을 의미하는 2차원 배열이다.
+
+for i in range(1, K+1):
+    score = subject[i][0]
+    time = subject[i][1]
+
+    for j in range(1, N+1):
+        if(j >= time): 
+            #공부할 수 있는 시간이 한 과목을 공부하는데 드는 시간 보다 클 때
+            
+            dp[i][j] = max(dp[i-1][j], dp[i-1][j-time]+score)
+            #이전 과목까지 공부한 시간(현재 과목은 공부하지 않을 때)와
+            #현재 과목을 공부해서 얻을 수 있는 점수([i-1][j-time])을 비교해서
+            #더 큰 값을 dp배열에 넣도록 한다.
+            #이때 새로운 과목을 공부하는 것이므로 항상 행은 i-1에 위치한다.
+            #왜냐하면 i로 할 경우 이미 새로운 과목을 공부한 것과 같기 때문이다.
+        else:
+            dp[i][j] = dp[i-1][j]
+            #만약 time이 j보다 큰 경우에는 항상 이전 과목까지 공부한 시간에 대해
+            #얻을 수 있는 점수를 dp배열에 넣도록 한다.
+            #왜냐하면 새로운 과목을 공부할 수 없기 때문이다.
+
+print(dp[K][N])

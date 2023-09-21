@@ -1,0 +1,56 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def dijkstra():
+    queue = deque()
+    queue.append([0, 0])
+
+    visited =[[0 for _ in range(0, N)] for _ in range(0, N)]
+    visited[0][0] = 1
+    #방문여부와 검은 벽을 뚫은 횟수를 동시에 표현하는 배열이다.
+    #근데 첫번째에 방문했다는 것을 표현하기 위해 벽을 뚫은 횟수를 1로 했기 때문에
+    #마지막에 visted[N-1][N-1]에서 -1을 한 값을 출력해야한다.
+
+    dx = [0,0,1,-1]
+    dy = [1,-1,0,0]
+
+    while queue:
+        node = queue.popleft()
+        x = node[0]
+        y = node[1]
+
+        if(x == N-1 and y == N-1):
+            break
+
+        for i in range(0, 4):
+            nx = x+dx[i]
+            ny = y+dy[i]
+
+            if(0 <= nx < N and 0 <= ny < N and not visited[nx][ny]):
+                if(maze[nx][ny] == 1):
+                    queue.appendleft([nx, ny]) 
+                    #1인 경우가 0일 때보다 우선순위가 높기 때문에
+                    #appendleft를 통해 queue에서 더 앞쪽으로 오게 한다.
+                    
+                    visited[nx][ny] = visited[x][y]
+                    #검은 벽을 뚫지 않았으므로 이전의 값 그대로 가져 가면 된다.
+
+                else:
+                    queue.append([nx, ny])
+                    visited[nx][ny] = visited[x][y]+1
+                    #검은 벽을 뚫었기 때문에 현재 값에 1을 추가한 값을 넣어야한다.
+
+    print(visited[N-1][N-1]-1)
+
+
+N = int(input())
+
+maze = []
+for _ in range(0, N):
+    temp = list(map(int, list(input().rstrip())))
+    maze.append(temp)
+
+
+dijkstra()

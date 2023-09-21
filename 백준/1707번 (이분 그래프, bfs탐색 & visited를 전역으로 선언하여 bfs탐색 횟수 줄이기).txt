@@ -1,0 +1,84 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+TC = int(input())
+
+
+def bfs(start, group):
+    #start는 bfs를 시작하는 정점을 의미하고
+    #group은 시작 정점이 속하는 그룹을 의미한다.
+
+    queue = deque()
+    visited[start] = group 
+    #먼저 start 정점을 첫번째 group으로 분류한다.
+
+    queue.append(start)
+
+    while queue:
+        node = queue.popleft()
+
+        for next in edge[node]:
+            if(not visited[next]):
+                queue.append(next)
+                visited[next] = -1 * visited[node]
+                #인접한 정점들을 기존의 정점과 다른 group으로 분류한다.
+                #그렇기 때문에 visited[node]에 -1을 곱하는 것이다.
+
+            elif(visited[next] == visited[node]):
+                #만약 visited[next]가 False가 아니라
+                #visited[node]와 같은 group에 해당하는 값을 가지고 있으면
+                #이 그래프는 이분 그래프가 아님을 의미하므로
+                #False를 반환하여 더 이상 탐색하지 않게 한다.
+                
+                return False
+
+    return True
+
+
+while TC:
+    V, E = map(int, input().split())
+    #V는 정점, E는 간선을 의미한다.
+
+    edge = [[] for _ in range(0, V+1)] #간선 정보를 받는 배열이다.
+    for _ in range(0, E):
+        start, end = map(int, input().split())
+        edge[start].append(end)
+        edge[end].append(start)
+        #무방향성 그래프이므로 start와 end 모두에 그 간선 정보를 저장한다.
+
+    #print(edge)
+
+    find = True #이분 그래프인지 받는 변수
+    visited = [False]*(V+1)
+    #방문 여부와 인접한 노드가 서로 다른 그룹인지 받는 배열
+
+    #이분 그래프란
+    #서로 인접한 노드가 서로 다른 그룹으로 묶을 수 있는 그래프를 의미한다.
+    #즉, 그래프의 각 노드를 빨간색과 파란색으로 칠할 때
+    #인접한 노드는 서로 다른 색깔로 칠해야하고
+    #그래프의 모든 노드에 대해서 이를 적용할 수 있는 그래프를 의미한다.
+    #그렇기 때문에 그래프의 노드를 빨간색이 칠해진 노드의 그룹
+    #파란색이 칠해진 노드의 그룹으로 분리할 수 있어야 한다.
+    #이를 1과 -1로 방문여부에 표기하여 그룹으로 분리할 수 있는지 찾으면 된다.
+
+    for i in range(1, V+1):
+        if(not visited[i]):
+            #visited배열은 전역 배열이므로
+            #start에 해당하는 정점에서 최대한 다 탐색한 다음
+            #visited가 업데이트 된 상태에서
+            #다른 정점 중에서 start 정점에서 탐색할 수 없는
+            #정점만 이어서 탐색하도록 한다.
+            #이렇게 함으로써 bfs탐색 횟수를 줄일 수 있다.
+            
+            find = bfs(i, 1)
+
+            if (not find):
+                break
+
+    if(find): #해당 그래프가 이분 그래프인 경우
+        print("YES")
+    else: #해당 그래프가 이분 그래프가 아닌 경우
+        print("NO")
+
+    TC = TC - 1
