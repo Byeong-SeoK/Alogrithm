@@ -1,0 +1,49 @@
+import sys
+input = sys.stdin.readline
+
+N, M = map(int, input().split())
+#N, M 은 종이의 가로 세로에 대한 값이다.
+
+block = []
+for _ in range(0, N):
+    temp = list(map(int, input().split()))
+    block.append(temp)
+
+
+up = N*M #위 아래의 겉넓이는 N*M이다.
+
+left = 0 #왼쪽 부분의 겉넓이
+for i in range(0, N):
+    for j in range(0, M):
+        if(j == 0):
+            #첫번째 블록은 항상 left에 추가된다.
+            #왜냐하면 가장 왼쪽 부분에 존재하는 블록이므로
+            #앞쪽에 겹치는 블록이 없기 때문에 그대로 들어갈 수 있다.
+            left = left + block[i][j]
+        else:
+            #앞쪽에 겹치는 블록이 있기 때문에
+            #앞쪽에 겹치는 블록의 높이를 제외하고 더 높은 블록에 대해서만
+            #left에 겉넓이를 추가해야한다.
+            #그러므로 if문을 통해 더 높은 부분만 left에 추가되도록 한다.
+
+            if(block[i][j-1] < block[i][j]):
+                left = left + block[i][j] - block[i][j-1]
+
+front = 0
+for i in range(0, N):
+    for j in range(0, M):
+        if(i == 0):
+            #left일 때와 마찬가지로 첫번째 블록은 항상 front에 추가된다.
+            #왜냐하면 가장 앞쪽 부분에 존재하므로 겹치는 블록이 없기 때문이다.
+            front = front + block[i][j]
+
+        else:
+            #앞쪽에 겹치는 블록이 있기 때문에 겹치지 않는 블록만큼의
+            #겉넓이를 이 front에 추가하도록 한다.
+            #그러므로 더 높은 부분에 대해서만 추가되도록 조건문을 사용한다.
+            
+            if(block[i-1][j] < block[i][j]):
+                front = front + block[i][j] - block[i-1][j]
+
+total = 2*(up+front+left) #겉넓이는 up+front+left의 2배이다.
+print(total)
