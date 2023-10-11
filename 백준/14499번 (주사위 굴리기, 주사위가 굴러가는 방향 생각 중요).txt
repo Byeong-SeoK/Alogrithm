@@ -1,0 +1,49 @@
+import sys
+input = sys.stdin.readline
+
+dr = [0, 0, 0, -1, 1]
+dc = [0, 1, -1, 0, 0]
+#dr, dc는 각각 x좌표의 이동 y좌표의 이동 방향을 담은 배열이다.
+#0번째는 제자리 그대로 1번째는 동쪽으로 2번째는 서쪽으로 가는 것이다.
+#3번째는 위쪽으로 4번째는 아래쪽으로 가는 것을 의미한다.
+
+n, m, x, y, k = map(int, input().split())
+#n, m은 지도의 세로 가로 크기 x,y는 주사위의 처음 위치 k는 명령어의 개수
+
+maps = [list(map(int, input().split())) for _ in range(n)]
+command = list(map(int, input().split()))
+dice = [0] * 6
+
+
+for d in command:
+    nx = x + dr[d]
+    ny = y + dc[d]
+
+    if not 0 <= nx < n or not 0 <= ny < m:      ## 범위 밖에 있는 좌표면 continue
+        continue
+
+    ## 헷갈리기 때문에 방향으로 명시해줌
+    east, west, south, north, up, down = dice[0], dice[1], dice[2], dice[3], dice[4], dice[5]
+
+    ### 방향에 따라 주사위 굴리기~~~!!
+    if d == 1:
+        dice[0], dice[1], dice[4], dice[5] = down, up, east, west
+    elif d == 2:
+        dice[0], dice[1], dice[4], dice[5] = up, down, west, east
+    elif d == 3:
+        dice[2], dice[3], dice[4], dice[5] = up, down, north, south
+    elif d == 4:
+        dice[2], dice[3], dice[4], dice[5] = down, up, south, north
+
+    ## 지도에 숫자가 0일 때
+    if maps[nx][ny] == 0:
+        maps[nx][ny] = dice[5]
+
+    ## 지도의 숫자가 0이 아닐 때
+    else:
+        dice[5] = maps[nx][ny]
+        maps[nx][ny] = 0
+
+    ## 꼭 값을 갱신해주기!
+    x, y = nx, ny
+    print(dice[4])

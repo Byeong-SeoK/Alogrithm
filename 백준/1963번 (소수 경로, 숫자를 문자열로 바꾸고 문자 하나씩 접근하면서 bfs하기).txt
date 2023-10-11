@@ -1,0 +1,92 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def check_prime(is_prime):
+    is_prime[0], is_prime[1] = False, False
+    #0과 1은 소수가 아니므로 False로 처리한다.
+
+    for i in range(2, 10000):
+        if(is_prime[i] == True):
+            #is_prime값이 True라는 것은 소수임을 의미한다.
+            #아래 while문을 통해 실제 소수인지 판별하도록 한다.
+            j = 2
+
+            while (i*j < 10000):
+                #j배수 즉 2배수,, 3배수 등 배수에 해당하는 숫자들은
+                #모두 소수가 아닌 합성수이므로 False로 바꾼다.
+                #그리고 예를 들어 2배수가 10000을 넘어가면
+                #문제의 범위를 넘어서기 때문에 j를 +1하여 3배수로 바꾼다.
+                is_prime[i*j] = False
+                j = j+1
+
+
+
+def bfs(prime1, prime2):
+    visited = [False]*10000
+    visited[prime1] = True
+
+    queue = deque()
+    queue.append([prime1, 0])
+
+    while queue:
+        current, count = queue.popleft()
+
+        if(current == prime2):
+            return count
+
+        else:
+            current = str(current)
+
+            for i in range(0, 4):
+                #이 for문은 string으로 바뀐 current에 대해
+                #앞에서부터 하나씩 접근하기 위한 for문이다.
+
+                for j in range(0, 10):
+                    #이 for문은 위의 for문에서 선택한 자리수에 대해
+                    #그 값을 0부터 9까지 바꾸어보는 for문이다.
+                    #이때 바꾼 값이 is_prime에서 True이고 방문하지 않은 곳이면
+                    #queue에 넣고 아니면 넣지 않도록 한다.
+
+                    temp = int(current[:i] + str(j) + current[i+1:])
+                    #current[:i]로 i-1번째까지 값을 담도록 하고
+                    #current[i+1:]로 i+1번째부터 끝까지의 값을 담도록 한다.
+                    #그리고 선택된 i는 j로 값을 바꾸고 이 모든 것을 더해 새로운 값 temp를 만든다.
+                    #그리고 이 temp가 소수인지 방문한 적이 없는지 판단하도록 한다.
+
+                    if(is_prime[temp] and not visited[temp] and temp >= 1000):
+                        #소수이면서 방문하지 않았고 또 1000보다 더 큰 값을 가질 때만 탐색한다.
+                        visited[temp] = True
+                        queue.append([temp, count+1])
+
+    return None #while문에서 return되지 못하면 소수를 못찾은 것이다.
+
+
+TC = int(input())
+
+while TC:
+    prime1, prime2 = map(int, input().split())
+
+    if(prime1 == prime2):
+        #prime1과 prime2이 같으면 바꿀 필요가 없으므로
+        #0번 바꾸면 되는 것이므로 0을 출력한다.
+        print(0)
+
+    else:
+        is_prime = [True]*10000
+        #is_prime은 각 숫자가 소수인지 받는 배열이다.
+
+        check_prime(is_prime)
+        #print(is_prime)
+
+        cnt = bfs(prime1, prime2)
+
+        if(cnt == None):
+            print("Impossible")
+
+        else:
+            print(cnt)
+
+
+    TC = TC - 1

@@ -1,0 +1,112 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+
+def bfs(x, y, size):
+    visited = [[False for _ in range(0, N)] for _ in range(0, N)]
+    visited[x][y] = True
+
+    distance = [[0 for _ in range(0, N)] for _ in range(0, N)]
+    #아기상어가 특정 칸까지 갈 때까지 걸리는 거리를 담은 배열이다.
+
+    queue = deque()
+    queue.append([x, y])
+    #x,y라는 위치와 몇 마리를 먹었는지 받는 값을 queue에 넣는다.
+
+    eat = []
+    #아기 상어가 먹을 수 있는 물고기 위치를 받는 배열이다.
+
+    while queue:
+        cx, cy = queue.popleft()
+
+        dx = [0, 0, 1, -1]
+        dy = [1, -1, 0, 0]
+
+        for i in range(0, 4):
+            nx = cx + dx[i]
+            ny = cy + dy[i]
+
+            if (0 <= nx < N and 0 <= ny < N
+                    and sea[nx][ny] <= size and not visited[nx][ny]):
+                # nx, ny가 0부터 N까지 범위 내에 존재하고 또 sea[nx][ny]에 위치한
+                # 물고기의 사이즈가 상어 사이즈보다 작아야 한다.
+                # 마지막으로 방문한 적이 없어야지만 탐색하도록 한다.
+
+                visited[nx][ny] = True
+                distance[nx][ny] = distance[cx][cy] + 1
+
+                queue.append([nx, ny])
+                #물고기와 상어의 사이즈가 같은 경우 먹을 수는 없지만, 지나갈 수 있으므로
+                #queue에 같은 사이즈의 물고기 위치를 넣어 탐색한 것을 할 수 있다.
+
+                if(sea[nx][ny] < size and sea[nx][ny] != 0):
+                    #물고기의 사이즈가 아기 상어보다 작은 경우
+                    #eat 배열에 해당 물고기의 위치와 그때까지 걸린 거리에 대한 값을 넣는다.
+
+                    eat.append([nx, ny, distance[nx][ny]])
+
+    #아래 return값은 eat 배열을 조건에 맞게 정렬한 것이다.
+    #조건에서 거리가 가장 가까운 것을 먼저 가고 만약 거리가 가까우면 왼쪽 다음 위쪽 순으로
+    #먼저 물고기를 먹도록 되어있다. 그래서 lambda를 사용하여 정렬시킨다.
+    #이때 람다의 조건에 -를 붙이는 이유는 람다식은 항상 오름차순으로 정렬된다.
+    #그렇기 때문에 -를 붙여 내림차순으로 정렬되도록 만드는 것이다.
+    #즉, 아래의 람다식을 분석해보면, 먼저 거리를 기준으로 내림차순으로 정렬하고
+    #그리고 거리가 같은 것들에 대해 x값(왼쪽 위치)를 기준으로 내림차순으로 정렬한다.
+    #그리고 거리, x값이 같은 것들에 대해 y값(위쪽 위치)를 기준으로 내림차순으로 정렬한다.
+
+    return sorted(eat, key=lambda x: [-x[2], -x[0], -x[1]])
+
+
+
+N = int(input())
+
+sea = [] #물고기의 위치를 담은 배열
+x, y = 0, 0
+for _ in range(0, N):
+    temp = list(map(int, input().split()))
+
+    if(9 in temp):
+        x = _
+        y = temp.index(9)
+
+    sea.append(temp)
+
+size = 2 #아기 상어의 최초 크기
+
+count = 0 #상어가 잡아먹은 물고기 수를 받는 변수
+result = 0 #상어가 이동하는데 총 걸린 시간을 받는 변수
+
+while True:
+    #size에 대한 것은 여기서 변형해야하는데
+    #만약 bfs함수 내에서 size를 변형 시키면
+    #탐색에 영향을 주게 된다.
+    #그렇기 때문에 각 size마다 bfs를 한다고 생각한다.
+
+    Eaten = bfs(x, y, size)
+
+    if(len(Eaten) == 0):
+        #Eaten배열의 길이가 0이라는 뜻은
+        #더 이상 물고기를 먹을 수 없다는 뜻이므로
+        #탐색을 계속 할 필요가 없다.
+        break
+
+    nx, ny, dist = Eaten.pop()
+    #Eaten은 bfs에서 내림차순으로 정렬된 eat 배열을 반환 받은 것이다.
+    #그렇기 때문에 Eaten에서 pop한 값은 가장 가깝고 가장 왼쪽에 있고 가장 위쪽에 있는
+    #물고기에 대한 값을 가지고 있다. bfs에서 내림차순으로 정렬했기 때문에
+    #여기 while문의 Eaten은 단순 pop으로 해당 위치에 접근할 수 있다.
+
+    result = result + dist #그 물고기까지 가는 거리를 더한다.
+
+    sea[x][y], sea[nx][ny] = 0, 0 
+    #상어가 이동해서 물고기를 먹었으므로 원래 상어의 위치와 물고기 위치를 0으로 해야한다.
+    
+    x, y = nx, ny #상어의 위치를 이동한 곳으로 바꾼다.
+    count = count+1
+
+    if(count == size):
+        size = size+1
+        count = 0
+
+print(result)

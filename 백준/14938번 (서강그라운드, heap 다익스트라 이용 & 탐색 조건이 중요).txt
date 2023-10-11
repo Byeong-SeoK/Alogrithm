@@ -1,0 +1,70 @@
+import heapq
+import sys
+input = sys.stdin.readline
+
+
+def dijkstra(node):
+    distance[node] = 0
+
+    heap = []
+    heapq.heappush(heap, [0, node])
+
+    while heap:
+        dis, now = heapq.heappop(heap)
+
+        if(distance[now] < dis):
+            #현재 접근한 노드까지의 거리가 기존에 해당 노드까지 접근한 거리보다
+            #더 큰 경우 접근할 이유가 없다. 그래서 continue로 스킵한다.
+            continue
+
+        for next in graph[now]:
+            total_distance = dis + next[0]
+
+            if(distance[next[1]] > total_distance):
+                #만약 해당 노드까지 거리에 대한 값이 이번에 새로이 알게된 값보다
+                #더 큰 값을 가지고 있으면 더 작은 값으로 갱신한다.
+                distance[next[1]] = total_distance
+                heapq.heappush(heap, [total_distance, next[1]])
+
+
+
+N, M, R = map(int, input().split())
+#N은 지역 개수, M은 수색 범위, R은 길의 개수를 의미한다.
+
+items = [0] + list(map(int, input().split()))
+#각 지역에 있는 아이템 개수를 받는 배열
+
+graph = [[] for _ in range(0, N+1)]
+#graph배열은 각 지점에서 다른 곳으로 갈 수 있는 정보를 저장한 배열이다.
+#이때 이 배열은 [거리, 도착점] 형태로 값을 가지고 있다.
+
+for _ in range(0, R):
+    a, b, i = map(int, input().split())
+    graph[a].append([i, b])
+    graph[b].append([i, a])
+
+#print(items, graph)
+
+result = 0 #최대 아이템 개수를 받는 변수
+
+for i in range(1, N+1):
+    distance = [1e9] * (N + 1) 
+    #낙하지점부터 각 지점까지의 거리
+    #이때 모든 지점에 대해 한번씩 다 해봐야하므로
+    #이 for문 안에 distance배열을 선언한다.
+
+    dijkstra(i)
+    temp = 0
+
+    for j in range(1, N+1):
+        if(M >= distance[j]):
+            #낙하지점에서 각 지점까지 거리를 dijkstra를 통해 다 구했다
+            #그래서 M이하인 거리에 존재하는 지점의 아이템만 다 줍도록
+            #여기 for문에서 그 로직을 수행하도록 하면 된다.
+            temp = temp + items[j]
+
+        result = max(temp, result)
+
+
+
+print(result)
